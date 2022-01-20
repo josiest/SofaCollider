@@ -38,7 +38,7 @@ runSOFAroutine = { | source |
     lastLine
 };
 
-~apparentSourceVector = { | hrtfPath, index, precision |
+~sourceAt = { | hrtfPath, index, precision |
 
     // the octave source code that computes what we want
     runSOFAroutine.([
