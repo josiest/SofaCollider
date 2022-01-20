@@ -14,5 +14,7 @@
 ~sourceAt.(~hrtfPath, 91, 10)
     .do({ | val | val.postln; });
 
+"IR at".postln;
+~irAt.(~hrtfPath, 91, 10);
 0.exit;
 )

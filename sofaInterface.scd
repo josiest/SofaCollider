@@ -5,7 +5,7 @@ var runSOFAroutine;
 ~sofaRoot = PathName("/home/josiest/sofa/API_MO");
 ~sofaSrcDir = ~sofaRoot +/+ "API_MO";
 
-runSOFAroutine = { | source |
+runSOFAroutine = { | hrtfPath, source |
     var sourceFile, octaveCmd;
     var allSourceCode, pipe, output, lastLine, nextLine;
 
@@ -18,6 +18,8 @@ runSOFAroutine = { | source |
         "warning('off', 'all');",
         "addpath('%');".format(~sofaSrcDir.fullPath),
         "SOFAstart;"
+        "hrtf = SOFAload('%');".format(hrtfPath.fullPath),
+        "printf('SuperCollider Data Interface\\n');",
     ] ++ source;
 
     // write the source code to the temporary file
@@ -30,19 +32,24 @@ runSOFAroutine = { | source |
 
     // scan the output until the last line
     lastLine = pipe.getLine; nextLine = pipe.getLine;
-    while ({ nextLine.notNil }, { lastLine = nextLine; nextLine = pipe.getLine; });
+    while ({ lastLine != "SuperCollider Data Interface" }, {
+        lastLine = nextLine; nextLine = pipe.getLine;
+    });
+    while ({ nextLine.notNil }, {
+        output = output ++ nextLine ++ "\n";
+        nextLine = pipe.getLine;
+    });
 
     pipe.close;
     File.delete(sourceFile);
 
-    lastLine
+    output
 };
 
 ~sourceAt = { | hrtfPath, index, precision |
 
     // the octave source code that computes what we want
-    runSOFAroutine.([
-        "hrtf = SOFAload('%');".format(hrtfPath.fullPath),
+    runSOFAroutine.(hrtfPath, [
         "apv = SOFAcalculateAPV(hrtf);",
         "v = apv(%, :);".format(index),
         "printf('\\%.%f,\\%.%f,\\%.%f\\n', v(1), v(2), v(3));".format(
@@ -55,8 +62,7 @@ runSOFAroutine = { | source |
 ~closestSource = { | hrtfPath, azi, ele, r, precision |
 
     // the octave source code that computes what we want
-    runSOFAroutine.([
-        "hrtf = SOFAload('%');".format(hrtfPath.fullPath),
+    runSOFAroutine.(hrtfPath, [
         "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);".format(azi, ele, r),
         "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);".format(
             precision, precision, precision),
@@ -65,5 +71,15 @@ runSOFAroutine = { | source |
     .split($,).collect({|val, i|
         if(i == 0, { val.asInteger }, { val.asFloat })
     })
+};
+
+~irAt = { | hrtfPath, index, precision |
+
+    // the octave source code that gets the impulse response data
+    runSOFAroutine.(hrtfPath, [
+        "data = reshape(hrtf.Data.IR(%, :, :), [200, 2]);".format(index),
+        "printf('%s', mat2str(data));"
+    ])
+    .postln;
 };
 )
