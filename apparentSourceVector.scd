@@ -12,7 +12,7 @@
     ~hrtfFilename = "CIPIC_subject_003_hrir_final.sofa";
     hrtfPath = ~hrtfDir +/+ ~hrtfFilename;
     index = 1;
-    precision = 4;
+    precision = 10;
 
     // the octave unix command
     ~octaveCmd = "octave";
