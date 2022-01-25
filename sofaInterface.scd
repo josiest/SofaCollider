@@ -80,6 +80,9 @@ runSOFAroutine = { | hrtfPath, source |
         "data = reshape(hrtf.Data.IR(%, :, :), [200, 2]);".format(index),
         "printf('%s', mat2str(data));"
     ])
-    .postln;
+    // strip the encapsulating [] brackets
+    .replace("[").replace("]")
+    // split the data into two columns
+    .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
 };
 )
