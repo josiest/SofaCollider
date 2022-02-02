@@ -16,5 +16,9 @@
 
 "IR at".postln;
 ~irAt.(~hrtfPath, 91, 10).postln;
+
+// ~metaData.(~hrtfPath);
+// ~conventionsOf.(~hrtfPath);
+
 0.exit;
 )
