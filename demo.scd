@@ -15,6 +15,6 @@
     .do({ | val | val.postln; });
 
 "IR at".postln;
-~irAt.(~hrtfPath, 91, 10);
+~irAt.(~hrtfPath, 91, 10).postln;
 0.exit;
 )
