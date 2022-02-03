@@ -25,6 +25,7 @@ runSOFAroutine = { | hrtfPath, source |
     // define the source code to run:
     //   first we'll need to bootstrap some things
     allSourceCode = [
+        "warning('off', 'all');",
         // add the path to the sofa M/O repo and initialize
         "addpath('%');".format(~sofaSrcDir.fullPath),
         "SOFAstart;",
@@ -115,20 +116,24 @@ runSOFAroutine = { | hrtfPath, source |
 
 ~conventionsOf = { | hrtfPath |
 
-    var conventionPath, rawData, conventions;
+    var conventionPath, header, rawData, conventions;
 
     // define the path to the convention file and load the data
     conventionPath = ~sofaConventionsDir +/+ "FreeFieldHRIR_1.0.csv";
     // the file extension *says* csv, but the actual files use tab delimeters
-    rawData = TabFileReader.read(conventionPath.fullPath).postcs;
+    rawData = TabFileReader.read(conventionPath.fullPath);
 
     // separate the header line from the rest
     header = rawData[0];
-    rawData = rawData[1:];
+    rawData = rawData.copyToEnd(1);
 
     // populate the conventions dictionary
-    conventions = Dictionary();
-    rawData.do{ | line | line.do{ | val, i | conventions.put(header[i], val); } };
+    conventions = List();
+    rawData.do{ | line |
+        conventions.add(line.collect{ | val, i |
+            header[i] -> val.stripWhiteSpace
+        }.asDict);
+    };
 
     conventions
 };
@@ -170,5 +175,8 @@ runSOFAroutine = { | hrtfPath, source |
     // Source Position Type: spherical
     // ###    end    ###
     var output, global, sofaObj;
+    runSOFAroutine.(hrtfPath, [
+
+    ])
 };
 )
