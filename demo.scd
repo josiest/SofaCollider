@@ -7,18 +7,17 @@
 ~hrtfPath = ~hrtfDir +/+ ~hrtfFilename;
 
 // "closest source".postln;
-// ~closestSource.(~hrtfPath, 89, 13, 2, 10)
+// ~closestSourceFromVector.(~hrtfPath, [89, 13, 2])
 //     .do({ | val | val.postln; });
 // 
 // "source at".postln;
-// ~sourceAt.(~hrtfPath, 91, 10)
+// ~sourceVectorFromIndex.(~hrtfPath, 91)
 //     .do({ | val | val.postln; });
 // 
-// "IR at".postln;
-// ~irAt.(~hrtfPath, 91, 10).postln;
+"IR from index 91".postln;
+~irFromIndex.(~hrtfPath, 91).postln;
 
-// ~metaData.(~hrtfPath);
-// ~conventionsOf.(~hrtfPath).do{ | header, val |
+// ~conventionsFromFile.(~hrtfPath).do{ | header, val |
 //     "%s: %s".format(header, val).postln;
 // };
 
