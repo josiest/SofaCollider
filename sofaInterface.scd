@@ -143,7 +143,30 @@ runSOFAroutine = { | hrtfPath, source |
 
     var output, global, sofaObj;
     runSOFAroutine.(hrtfPath, [
-        "printf('GLOBAL_Conventions: %s\\n', hrtf.GLOBAL_Conventions);",
+        "printf('GLOBAL_Conventions:%s\\n', hrtf.GLOBAL_Conventions);",
+        "printf('GLOBAL_SOFAConventions:%s\\n', hrtf.GLOBAL_SOFAConventions);",
+        "printf('GLOBAL_SOFAConventionsVersion:%s\\n', hrtf.GLOBAL_SOFAConventionsVersion);",
+        "printf('GLOBAL_APIName:%s\\n', hrtf.GLOBAL_APIName);",
+        "printf('GLOBAL_APIVersion:%s\\n', hrtf.GLOBAL_APIVersion);",
+        "printf('GLOBAL_DataType:%s\\n', hrtf.GLOBAL_DataType);",
+        "printf('GLOBAL_RoomType:%s\\n', hrtf.GLOBAL_RoomType);",
+        "printf('GLOBAL_DateCreated:%s\\n', hrtf.GLOBAL_DateCreated);",
+        "printf('GLOBAL_DateModified:%s\\n', hrtf.GLOBAL_DateModified);",
+        "printf('GLOBAL_AuthorContact:%s\\n', hrtf.GLOBAL_AuthorContact);",
+        "printf('GLOBAL_Organization:%s\\n', hrtf.GLOBAL_Organization);",
+        "printf('GLOBAL_License:%s\\n', hrtf.GLOBAL_License);",
+        "printf('GLOBAL_Title:%s\\n', hrtf.GLOBAL_Title);",
+        "printf('GLOBAL_DatabaseName:%s\\n', hrtf.GLOBAL_DatabaseName);",
+        "printf('ListenerPositionType:%s\\n', hrtf.ListenerPosition_Type);",
+        "printf('ListenerPositionUnits:%s\\n', hrtf.ListenerPosition_Units);",
+        "printf('ReceiverPositionType:%s\\n', hrtf.ReceiverPosition_Type);",
+        "printf('ReceiverPositionUnits:%s\\n', hrtf.ReceiverPosition_Units);",
+        "printf('SourcePositionType:%s\\n', hrtf.SourcePosition_Type);",
+        "printf('SourcePositionUnits:%s\\n', hrtf.SourcePosition_Units);",
+        "printf('EmitterPositionType:%s\\n', hrtf.EmitterPosition_Type);",
+        "printf('EmitterPositionUnits:%s\\n', hrtf.EmitterPosition_Units);",
+        "printf('ListenerViewType:%s\\n', hrtf.ListenerView_Type);",
+        "printf('ListenerViewUnits:%s\\n', hrtf.ListenerView_Units);",
     ])
     .stripWhiteSpace.split($\n)
     .collect{ | line |
