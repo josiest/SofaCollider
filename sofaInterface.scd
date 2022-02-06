@@ -1,6 +1,7 @@
 (
 var runSOFAroutine;
-var globalAttributes;
+var attributes;
+var printOctaveAttribute;
 
 // define where to find the sofa source repository
 ~sofaRoot = PathName("/home/josiest/sofa/API_MO");
@@ -72,7 +73,7 @@ runSOFAroutine = { | hrtfPath, source |
  *
  * \return a vector of measurements (azimuth, elevation, radius)
  */
-~sourceVectorAt = { | hrtfPath, index, precision = 10 |
+~sourceVectorFromIndex = { | hrtfPath, index, precision = 10 |
 
     // compile the octave source code that computes the source vector
     runSOFAroutine.(hrtfPath, [
@@ -88,13 +89,18 @@ runSOFAroutine = { | hrtfPath, source |
     .split($,).collect({ | val | val.asFloat })
 };
 
-~closestSource = { | hrtfPath, azi, ele, r, precision |
+// get the index and measurements of the source position
+// closest to the given input vector
+~closestSourceFromVector = { | hrtfPath, vec, precision = 10 |
 
-    // the octave source code that computes what we want
     runSOFAroutine.(hrtfPath, [
-        "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);".format(azi, ele, r),
-        "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);".format(
-            precision, precision, precision),
+        // get the index and measurements closest to the input vec
+        "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);"
+            .format(vec[0], vec[1], vec[2]), // [azi, ele, r]
+
+        // print the index and closest measurements that were found
+        "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);"
+            .format(precision, precision, precision),
     ])
     // split the output into list of values, collect as floats
     .split($,).collect({|val, i|
@@ -102,20 +108,21 @@ runSOFAroutine = { | hrtfPath, source |
     })
 };
 
-~irAt = { | hrtfPath, index, precision |
+// get the impulse responses at the given index
+~irFromIndex = { | hrtfPath, index, precision = 10 |
 
-    // the octave source code that gets the impulse response data
     runSOFAroutine.(hrtfPath, [
-        "data = reshape(hrtf.Data.IR(%, :, :), [200, 2]);".format(index),
+        // get the IR matrix and splice out the desired index
+        "data = squeeze(hrtf.Data.IR(%, :, :));".format(index),
         "printf('%s', mat2str(data));"
     ])
     // strip the encapsulating [] brackets
     .replace("[").replace("]")
-    // split the data into two columns
+    // split the data into m columns
     .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
 };
 
-~conventionsOf = { | hrtfPath |
+~conventionsFromFile = { | hrtfPath |
 
     var conventionPath, header, rawData, conventions;
 
@@ -139,39 +146,34 @@ runSOFAroutine = { | hrtfPath, source |
     conventions
 };
 
-globalAttributes = [
-    "printf('GLOBAL_Conventions:%s\\n', hrtf.GLOBAL_Conventions);",
-    "printf('GLOBAL_SOFAConventions:%s\\n', hrtf.GLOBAL_SOFAConventions);",
-    "printf('GLOBAL_SOFAConventionsVersion:%s\\n', hrtf.GLOBAL_SOFAConventionsVersion);",
-    "printf('GLOBAL_APIName:%s\\n', hrtf.GLOBAL_APIName);",
-    "printf('GLOBAL_APIVersion:%s\\n', hrtf.GLOBAL_APIVersion);",
-    "printf('GLOBAL_DataType:%s\\n', hrtf.GLOBAL_DataType);",
-    "printf('GLOBAL_RoomType:%s\\n', hrtf.GLOBAL_RoomType);",
-    "printf('GLOBAL_DateCreated:%s\\n', hrtf.GLOBAL_DateCreated);",
-    "printf('GLOBAL_DateModified:%s\\n', hrtf.GLOBAL_DateModified);",
-    "printf('GLOBAL_AuthorContact:%s\\n', hrtf.GLOBAL_AuthorContact);",
-    "printf('GLOBAL_Organization:%s\\n', hrtf.GLOBAL_Organization);",
-    "printf('GLOBAL_License:%s\\n', hrtf.GLOBAL_License);",
-    "printf('GLOBAL_Title:%s\\n', hrtf.GLOBAL_Title);",
-];
+attributes = [
+    \global ->
+        ["GLOBAL_Conventions", "GLOBAL_SOFAConventions",
+         "GLOBAL_SOFAConventionsVersion", "GLOBAL_APIName", "GLOBAL_APIVersion",
+         "GLOBAL_DataType", "GLOBAL_RoomType", "GLOBAL_DateCreated",
+         "GLOBAL_DateModified", "GLOBAL_AuthorContact", "GLOBAL_Organization",
+         "GLOBAL_License", "GLOBAL_Title"],
+
+    \SimpleFreeFieldHRIR ->
+        ["GLOBAL_DatabaseName", "ListenerPosition:Type",
+         "ListenerPosition:Units", "ReceiverPosition:Type",
+         "ReceiverPosition:Units", "SourcePosition:Type",
+         "SourcePosition:Units", "EmitterPosition:Type",
+         "EmitterPosition:Units", "ListenerView:Type", "ListenerView:Units"]
+].asDict;
+printOctaveAttribute = { | attr |
+    "printf('%:\\%s\\n', hrtf.%);"
+        .format(attr.replace(":"), attr.replace(":", "_"))
+};
 
 // Create a new SOFA object from a SimpleFreeFieldHRIR file
 ~newSimpleFreeFieldHRIRFromFile = { | hrtfPath |
 
     var output, global, sofaObj;
-    runSOFAroutine.(hrtfPath, globalAttributes ++ [
-        "printf('GLOBAL_DatabaseName:%s\\n', hrtf.GLOBAL_DatabaseName);",
-        "printf('ListenerPositionType:%s\\n', hrtf.ListenerPosition_Type);",
-        "printf('ListenerPositionUnits:%s\\n', hrtf.ListenerPosition_Units);",
-        "printf('ReceiverPositionType:%s\\n', hrtf.ReceiverPosition_Type);",
-        "printf('ReceiverPositionUnits:%s\\n', hrtf.ReceiverPosition_Units);",
-        "printf('SourcePositionType:%s\\n', hrtf.SourcePosition_Type);",
-        "printf('SourcePositionUnits:%s\\n', hrtf.SourcePosition_Units);",
-        "printf('EmitterPositionType:%s\\n', hrtf.EmitterPosition_Type);",
-        "printf('EmitterPositionUnits:%s\\n', hrtf.EmitterPosition_Units);",
-        "printf('ListenerViewType:%s\\n', hrtf.ListenerView_Type);",
-        "printf('ListenerViewUnits:%s\\n', hrtf.ListenerView_Units);",
-    ])
+    runSOFAroutine.(
+        hrtfPath,
+        attributes[\global].collect(printOctaveAttribute) ++
+        attributes[\SimpleFreeFieldHRIR].collect(printOctaveAttribute))
     .stripWhiteSpace.split($\n)
     .collect{ | line |
         var components;
