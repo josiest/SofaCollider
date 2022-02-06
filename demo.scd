@@ -14,12 +14,12 @@
 // ~sourceVectorFromIndex.(~hrtfPath, 91)
 //     .do({ | val | val.postln; });
 // 
-"IR from index 91".postln;
-~irFromIndex.(~hrtfPath, 91).postln;
+// "IR from index 91".postln;
+// ~irFromIndex.(~hrtfPath, 91).postln;
 
-// ~conventionsFromFile.(~hrtfPath).do{ | header, val |
-//     "%s: %s".format(header, val).postln;
-// };
+~conventionsFromFile.(~hrtfPath).do{ | header, val |
+    "%s: %s".format(header, val).postln;
+};
 
 "sofa object:".postln;
 ~newSimpleFreeFieldHRIRFromFile.(~hrtfPath)

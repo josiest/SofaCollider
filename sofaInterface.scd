@@ -155,11 +155,14 @@ attributes = [
          "GLOBAL_License", "GLOBAL_Title"],
 
     \SimpleFreeFieldHRIR ->
-        ["GLOBAL_DatabaseName", "ListenerPosition:Type",
-         "ListenerPosition:Units", "ReceiverPosition:Type",
-         "ReceiverPosition:Units", "SourcePosition:Type",
-         "SourcePosition:Units", "EmitterPosition:Type",
-         "EmitterPosition:Units", "ListenerView:Type", "ListenerView:Units"]
+        ["GLOBAL_DatabaseName", "GLOBAL_ListenerShortName",
+         "ListenerPosition:Type", "ListenerPosition:Units",
+         "ReceiverPosition:Type", "ReceiverPosition:Units",
+         "SourcePosition:Type", "SourcePosition:Units",
+         "EmitterPosition:Type", "EmitterPosition:Units",
+         "ListenerView:Type", "ListenerView:Units",
+         "Data.SamplingRate:Units"
+     ]
 ].asDict;
 printOctaveAttribute = { | attr |
     "printf('%:\\%s\\n', hrtf.%);"
