@@ -17,12 +17,12 @@
 // "IR from index 91".postln;
 // ~irFromIndex.(~hrtfPath, 91).postln;
 
-~conventionsFromFile.(~hrtfPath).do{ | header, val |
-    "%s: %s".format(header, val).postln;
-};
+// ~conventionsFromFile.(~hrtfPath).do{ | header, val |
+//     "%s: %s".format(header, val).postln;
+// };
 
 "sofa object:".postln;
-~newSimpleFreeFieldHRIRFromFile.(~hrtfPath)
+~newSofaObjectFromFile.value(~hrtfPath)
     .pairsDo{ | attr, val | "%: %".format(attr, val).postln; };
 0.exit;
 )

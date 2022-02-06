@@ -122,6 +122,7 @@ runSOFAroutine = { | hrtfPath, source |
     .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
 };
 
+// get a dictionary of the sofa conventions from a convention file
 ~conventionsFromFile = { | hrtfPath |
 
     var conventionPath, header, rawData, conventions;
@@ -146,6 +147,8 @@ runSOFAroutine = { | hrtfPath, source |
     conventions
 };
 
+// map sofa conventions to their mandatory attributes
+// TODO: create this dictionary automatically using conventionsFromFile
 attributes = [
     \global ->
         ["GLOBAL_Conventions", "GLOBAL_SOFAConventions",
@@ -164,20 +167,29 @@ attributes = [
          "Data.SamplingRate:Units"
      ]
 ].asDict;
+
+// map a SOFA attribute into octave code that prints it out
 printOctaveAttribute = { | attr |
     "printf('%:\\%s\\n', hrtf.%);"
         .format(attr.replace(":"), attr.replace(":", "_"))
 };
 
-// Create a new SOFA object from a SimpleFreeFieldHRIR file
-~newSimpleFreeFieldHRIRFromFile = { | hrtfPath |
+// Create a new SOFA object from a sofa file with the specified convention
+// TODO: use octave or file naming to determine which convention it uses
+~newSofaObjectFromFile = { | hrtfPath, convention=\SimpleFreeFieldHRIR |
 
     var output, global, sofaObj;
+
+    // get the values of all the attributes given
     runSOFAroutine.(
         hrtfPath,
-        attributes[\global].collect(printOctaveAttribute) ++
-        attributes[\SimpleFreeFieldHRIR].collect(printOctaveAttribute))
+        // get all the global conventions, as well as the specific convention
+        attributes[\global].collect(printOctaveAttribute)
+        ++ attributes[convention].collect(printOctaveAttribute)
+    )
+    // there might be trailing newlines, so strip before splitting
     .stripWhiteSpace.split($\n)
+    // convert each line into an association: attribute name to its value
     .collect{ | line |
         var components;
         components = line.split($:).collect{ | x | x.stripWhiteSpace };
