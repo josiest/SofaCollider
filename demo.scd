@@ -18,9 +18,12 @@
 // ~irAt.(~hrtfPath, 91, 10).postln;
 
 // ~metaData.(~hrtfPath);
-~conventionsOf.(~hrtfPath).do{ | header, val |
-    "%s: %s".format(header, val).postln;
-};
+// ~conventionsOf.(~hrtfPath).do{ | header, val |
+//     "%s: %s".format(header, val).postln;
+// };
 
+"sofa object:".postln;
+~newSimpleFreeFieldHRIRFromFile.(~hrtfPath)
+    .pairsDo{ | attr, val | "%: %".format(attr, val).postln; };
 0.exit;
 )

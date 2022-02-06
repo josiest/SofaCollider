@@ -138,45 +138,18 @@ runSOFAroutine = { | hrtfPath, source |
     conventions
 };
 
-~metaData = { | hrtfPath |
+// Create a new SOFA object from a SimpleFreeFieldHRIR file
+~newSimpleFreeFieldHRIRFromFile = { | hrtfPath |
 
-    // sample output
-    //
-    // ### SOFAinfo: ###
-    // SOFA 2.0
-    // Conventions: SimpleFreeFieldHRIR 1.0
-    // API:         ARI SOFA API for Matlab/Octave 2.0
-    // Data Type:   FIR
-    // Room Type:   free field
-    // Date Created:   2022-01-15 13:30:21
-    // Date Modified:  2022-01-15 13:30:22
-    // Author Contact:
-    // Organization:
-    // License:     No license provided, ask the author for permission
-    // Title:
-    // Datebase Name:  CIPIC
-    // 
-    // Measurement details (SimpleFreeFieldHRIR):
-    // --------------------
-    // Number of azimuth angles:   805
-    // Number of elevation angles: 537
-    // Number of radii:            1
-    // Sampling Rate: 44100 hertz
-    // Listener Short Name: subject_003
-    // Listener Position: 0  0  0 metre
-    // Listener View:     1  0  0 metre
-    // 2 Receiver Positions
-    //    from 0        0.09           0 [metre]
-    //    to   0       -0.09           0 [metre]
-    // Receiver Position Type: cartesian
-    // 1250 Source Positions
-    //    from 82.8929     -7.05302            1 [degree, degree, metre]
-    //    to   263.6174     -7.714204             1 [degree, degree, metre]
-    // Source Position Type: spherical
-    // ###    end    ###
     var output, global, sofaObj;
     runSOFAroutine.(hrtfPath, [
-
+        "printf('GLOBAL_Conventions: %s\\n', hrtf.GLOBAL_Conventions);",
     ])
+    .stripWhiteSpace.split($\n)
+    .collect{ | line |
+        var components;
+        components = line.split($:).collect{ | x | x.stripWhiteSpace };
+        components[0] -> components[1]
+    }.asDict
 };
 )
