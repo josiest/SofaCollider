@@ -1,8 +1,34 @@
 SofaInterface {
     // define where to find the sofa source repository
-    classvar <rootDir = PathName("/home/josiest/sofa/API_MO");
-    classvar <srcDir = rootDir +/+ "API_MO";
-    classvar <conventionsDir = srcDir +/+ "conventions";
+    classvar <rootDir;
+    classvar <srcDir;
+    classvar <conventionsDir;
+    classvar <attributes;
+
+    *initClass{
+        rootDir = "/home/josiest/sofa/API_MO/";
+        srcDir = rootDir ++ "API_MO/";
+        conventionsDir = srcDir ++ "conventions/";
+        attributes = [
+            \global ->
+                ["GLOBAL_Conventions", "GLOBAL_SOFAConventions",
+                 "GLOBAL_SOFAConventionsVersion", "GLOBAL_APIName",
+                 "GLOBAL_APIVersion", "GLOBAL_DataType", "GLOBAL_RoomType",
+                 "GLOBAL_DateCreated", "GLOBAL_DateModified",
+                 "GLOBAL_AuthorContact", "GLOBAL_Organization",
+                 "GLOBAL_License", "GLOBAL_Title"],
+        
+            \SimpleFreeFieldHRIR ->
+                ["GLOBAL_DatabaseName", "GLOBAL_ListenerShortName",
+                 "ListenerPosition:Type", "ListenerPosition:Units",
+                 "ReceiverPosition:Type", "ReceiverPosition:Units",
+                 "SourcePosition:Type", "SourcePosition:Units",
+                 "EmitterPosition:Type", "EmitterPosition:Units",
+                 "ListenerView:Type", "ListenerView:Units",
+                 "Data.SamplingRate:Units"
+             ]
+        ].asDict;
+    }
     
     // Get the source vector of a given index from a SOFA object.
     //
@@ -14,7 +40,7 @@ SofaInterface {
     *sourceVectorFromIndex { | hrtfPath, index, precision = 10 |
     
         // compile the octave source code that computes the source vector
-        runSOFAroutine.(hrtfPath, [
+        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
             // get a matrix of source vectors then grab the specified index
             "apv = SOFAcalculateAPV(hrtf);",
             "v = apv(%, :);".format(index),
@@ -26,25 +52,32 @@ SofaInterface {
         // split the output into list of values, collect as floats
         .split($,).collect({ | val | val.asFloat })
     }
-    
-    *closestSourceFromVector { | hrtfPath, azi, ele, r, precision = 10 |
+
+    // find the closest source position to a given vector
+    *closestSourceFromVector { | hrtfPath, vec, precision = 10 |
     
         // the octave source code that computes what we want
-        runSOFAroutine.(hrtfPath, [
-            "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);".format(azi, ele, r),
-            "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);".format(
-                precision, precision, precision),
+        "path in function: ".post;
+        hrtfPath.postln;
+        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
+
+            "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);"
+            .format(vec[0], vec[1], vec[2]),
+
+            "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);"
+            .format(precision, precision, precision),
         ])
         // split the output into list of values, collect as floats
         .split($,).collect({|val, i|
             if(i == 0, { val.asInteger }, { val.asFloat })
         })
-    };
+    }
     
-    *irFromIndex = { | hrtfPath, index, precision |
+    // get the Impulse Response at a given index
+    *irFromIndex { | hrtfPath, index, precision = 10 |
     
         // the octave source code that gets the impulse response data
-        runSOFAroutine.(hrtfPath, [
+        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
             "data = reshape(hrtf.Data.IR(%, :, :), [200, 2]);".format(index),
             "printf('%s', mat2str(data));"
         ])
@@ -52,16 +85,17 @@ SofaInterface {
         .replace("[").replace("]")
         // split the data into two columns
         .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
-    };
+    }
     
-    *conventionsOfSofaFile = { | hrtfPath |
+    // get th econventions of a sofa file
+    *conventionsOfSofaFile { | hrtfPath |
     
         var conventionPath, header, rawData, conventions;
     
         // define the path to the convention file and load the data
-        conventionPath = ~sofaConventionsDir +/+ "FreeFieldHRIR_1.0.csv";
+        conventionPath = SofaInterface.conventionsDir ++ "/FreeFieldHRIR_1.0.csv";
         // the file extension *says* csv, but the actual files use tab delimeters
-        rawData = TabFileReader.read(conventionPath.fullPath);
+        rawData = TabFileReader.read(conventionPath);
     
         // separate the header line from the rest
         header = rawData[0];
@@ -75,8 +109,38 @@ SofaInterface {
             }.asDict);
         };
     
-        conventions
-    };
+        ^conventions
+    }
+
+    *prPrintOctaveAttribute{ | attr |
+        ^"printf('%:\\%s\\n', hrtf.%);"
+            .format(attr.replace(":"), attr.replace(":", "_"))
+    }
+
+    *prLoadSofaMetaData{ | hrtfPath, convention=\SimpleFreeFieldHRIR |
+
+        var output, global, sofaObj;
+
+        // get the values of all the attributes given
+        ^SofaInterface.prRunSOFAroutine(
+
+            hrtfPath,
+            // get all the global conventions, as well as the specific convention
+            attributes[\global]
+                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
+
+            attributes[convention]
+                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) })
+        )
+        // there might be trailing newlines, so strip before splitting
+        .stripWhiteSpace.split($\n)
+        // convert each line into an association: attribute name to its value
+        .collect{ | line |
+            var components;
+            components = line.split($:).collect{ | x | x.stripWhiteSpace };
+            components[0] -> components[1]
+        }.asDict
+    }
     
     // Run octave code on a SOFA object using the SOFA API.
     //
@@ -85,24 +149,31 @@ SofaInterface {
     //
     // The source code should refer to the SOFA object file as `hrtf`. Any output
     // by the source code will be captured and returned as a string.
-    *prRunSOFAroutine = { | hrtfPath, source |
+    *prRunSOFAroutine { | hrtfPath, source |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
     
         // the name of the octave command and the temporary source file
         octaveCmd = "octave";
         sourceFile = "temp.m";
+
+        "sofa root dir: ".post;
+        SofaInterface.rootDir.postln;
+        "sofa src dir: ".post;
+        SofaInterface.srcDir.postln;
+        "hrtf path: ".post;
+        hrtfPath.postln;
     
         // define the source code to run:
         //   first we'll need to bootstrap some things
         allSourceCode = [
             "warning('off', 'all');",
             // add the path to the sofa M/O repo and initialize
-            "addpath('%');".format(~sofaSrcDir.fullPath),
+            "addpath('%');".format(SofaInterface.srcDir),
             "SOFAstart;",
     
             // load the specified sofa file and mark the beginning of output
-            "hrtf = SOFAload('%');".format(hrtfPath.fullPath),
+            "hrtf = SOFAload('%');".format(hrtfPath),
             "printf('SuperCollider Data Interface\\n');",
     
         // now we can append the specified source code
@@ -131,6 +202,6 @@ SofaInterface {
         pipe.close;
         File.delete(sourceFile);
     
-        output
-    };
+        ^output
+    }
 }
