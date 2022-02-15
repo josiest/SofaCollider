@@ -138,7 +138,7 @@ SofaInterface {
         .collect{ | line |
             var components;
             components = line.split($:).collect{ | x | x.stripWhiteSpace };
-            components[0] -> components[1]
+            components[0].replace(":").replace(".").asSymbol -> components[1]
         }.asDict
     }
     
@@ -156,13 +156,6 @@ SofaInterface {
         // the name of the octave command and the temporary source file
         octaveCmd = "octave";
         sourceFile = "temp.m";
-
-        "sofa root dir: ".post;
-        SofaInterface.rootDir.postln;
-        "sofa src dir: ".post;
-        SofaInterface.srcDir.postln;
-        "hrtf path: ".post;
-        hrtfPath.postln;
     
         // define the source code to run:
         //   first we'll need to bootstrap some things
