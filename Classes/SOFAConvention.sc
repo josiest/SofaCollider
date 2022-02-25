@@ -20,6 +20,6 @@ SofaConvention {
 
                 fieldName -> attributes[attrSymbol]
             }
-            .asDict; //.know_(true); // indexing can be done through messaging
+            .asDict.know_(true); // indexing can be done through messaging
     }
 }

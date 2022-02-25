@@ -81,6 +81,11 @@ SofaInterface {
 
     *globalAttributeAsField{ | name |
         var attr = name.split($:)[1]; // get rid of "GLOBAL:"
+
+        // decapitalize acronyms that appear at the start of the attribute name
+        attr = attr.replace("API", "api").replace("SOFA", "sofa");
+
+        // decapitalize the first letter and convert to ymbol
         ^(attr[0].toLower ++ attr.copyToEnd(1)).asSymbol;
     }
 
