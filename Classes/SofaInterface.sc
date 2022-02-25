@@ -80,7 +80,8 @@ SofaInterface {
     }
 
     *globalAttributeAsField{ | name |
-        ^name.split($:)[1].asSymbol;
+        var attr = name.split($:)[1]; // get rid of "GLOBAL:"
+        ^(attr[0].toLower ++ attr.copyToEnd(1)).asSymbol;
     }
 
     // Get the source vector of a given index from a SOFA object.
