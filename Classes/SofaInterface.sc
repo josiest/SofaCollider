@@ -53,19 +53,21 @@ SofaInterface {
         .stripWhiteSpace.split($\n)
         // convert each line into an association: attribute name to its value
         .collect{ | line |
-            var components;
+            var components, attrName, attrValue;
             components = line
                 .split(SofaInterface.prOctaveAttributeDelimeter)
                 .collect{ | x | x.stripWhiteSpace };
 
+            attrName = SofaInterface.globalAttributeAsSymbol(components[0]);
 
-            "... ".post;
-            components[0].post;
-            " ... ".post;
-            components[0].replace(":", "_").post;
-            " ...".postln;
+            // there may be spaces in the output value
+            // so we'll need to undo the string split
+            attrValue = components
+                .copyToEnd(1)   // take the rest of the array past the first elem
+                .join($ );      // restore the original string
 
-            SofaInterface.globalAttributeAsSymbol(components[0]) -> components[1]
+            attrName -> attrValue
+
         }.asDict
     }
 
