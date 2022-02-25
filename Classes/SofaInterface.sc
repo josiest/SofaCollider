@@ -79,6 +79,10 @@ SofaInterface {
         ^name.replace(":", "_").asSymbol;
     }
 
+    *globalAttributeAsField{ | name |
+        ^name.split($:)[1].asSymbol;
+    }
+
     // Get the source vector of a given index from a SOFA object.
     //
     // \param hrtfPath the path name to the sofa file to load

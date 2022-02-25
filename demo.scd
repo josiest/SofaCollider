@@ -24,19 +24,23 @@
 "sofa object: ".postln;
 ~sofaObj = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 
-"globalConventions: ".post; ~sofaObj.globalConventions.postln;
-"globalSofaConventions: ".post; ~sofaObj.globalSofaConventions.postln;
-"globalSofaConventionsVersion: ".post; ~sofaObj.globalSofaConventionsVersion.postln;
-"globalAPIName: ".post; ~sofaObj.globalAPIName.postln;
-"globalAPIVersion: ".post; ~sofaObj.globalAPIVersion.postln;
-"globalDataType: ".post; ~sofaObj.globalDataType.postln;
-"globalRoomType: ".post; ~sofaObj.globalRoomType.postln;
-"globalDateCreated: ".post; ~sofaObj.globalDateCreated.postln;
-"globalDateModified: ".post; ~sofaObj.globalDateModified.postln;
-"globalAuthorContact: ".post; ~sofaObj.globalAuthorContact.postln;
-"globalOrganization: ".post; ~sofaObj.globalOrganization.postln;
-"globalLicense: ".post; ~sofaObj.globalLicense.postln;
-"globalTitle: ".post; ~sofaObj.globalTitle.postln;
+// "metaData.Conventions: ".post; ~sofaObj.metaData.Conventions.postln;
+// "metaData.SofaConventions: ".post; ~sofaObj.metaData.SofaConventions.postln;
+// "metaData.SofaConventionsVersion: ".post;
+// ~sofaObj.metaData.SofaConventionsVersion.postln;
+// "metaData.APIName: ".post; ~sofaObj.metaData.APIName.postln;
+// "metaData.APIVersion: ".post; ~sofaObj.metaData.APIVersion.postln;
+// "metaData.DataType: ".post; ~sofaObj.metaData.DataType.postln;
+// "metaData.RoomType: ".post; ~sofaObj.metaData.RoomType.postln;
+// "metaData.DateCreated: ".post; ~sofaObj.metaData.DateCreated.postln;
+// "metaData.DateModified: ".post; ~sofaObj.metaData.DateModified.postln;
+// "metaData.AuthorContact: ".post; ~sofaObj.metaData.AuthorContact.postln;
+// "metaData.Organization: ".post; ~sofaObj.metaData.Organization.postln;
+// "metaData.License: ".post; ~sofaObj.metaData.License.postln;
+// "metaData.Title: ".post; ~sofaObj.metaData.Title.postln;
+
+~sofaObj.metaData.keysValuesDo{ | key, value | key.post; ": ".post; value.postln; };
+
 "globalDatabaseName: ".post; ~sofaObj.globalDatabaseName.postln;
 "globalListenerShortName: ".post; ~sofaObj.globalListenerShortName.postln;
 "listenerPositionType: ".post; ~sofaObj.listenerPositionType.postln;
