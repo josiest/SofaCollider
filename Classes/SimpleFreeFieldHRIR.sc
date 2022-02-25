@@ -23,10 +23,10 @@ SimpleFreeFieldHRIR : SofaConvention {
         var attributes;
         attributes = SofaInterface.prLoadSofaMetaData(filePath);
         ^super.new(\SimpleFreeFieldHRIR, filePath, attributes)
-              .initFromAttributes(attributes);
+              .initSimpleFreeFieldHRIRFromAttributes(attributes);
     }
 
-    initFromAttributes{ | attributes |
+    initSimpleFreeFieldHRIRFromAttributes{ | attributes |
 
         globalDatabaseName = attributes[\GLOBAL_DatabaseName];
         globalListenerShortName = attributes[\GLOBAL_ListenerShortName];

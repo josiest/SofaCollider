@@ -18,10 +18,11 @@ SofaConvention {
 
     // call by subclass, only
     *new{ | kind, filePath, attributes |
-        ^super.newCopyArgs(kind, filePath).initFromAttributes(attributes)
+        ^super.newCopyArgs(kind, filePath)
+              .initMetaDataFromAttributes(attributes)
     }
 
-    initFromAttributes{ | attributes |
+    initMetaDataFromAttributes{ | attributes |
 
         globalConventions = attributes[\GLOBAL_Conventions];
         globalSofaConventions = attributes[\GLOBAL_SOFAConventions];
