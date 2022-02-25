@@ -22,13 +22,6 @@ SimpleFreeFieldHRIR : SofaConvention {
     *newFromFile{ | filePath |
         var attributes;
         attributes = SofaInterface.loadSofaMetaData(filePath);
-        "=== Loaded Attributes ===".postln;
-        attributes.keysValuesDo{ | key, value |
-            key.post;
-            ": ".post;
-            value.postln;
-        };
-        "=========================".postln;
         ^super.new(\SimpleFreeFieldHRIR, filePath, attributes)
               .initSimpleFreeFieldHRIRFromAttributes(attributes);
     }

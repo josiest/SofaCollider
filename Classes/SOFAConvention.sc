@@ -18,12 +18,23 @@ SofaConvention {
 
     // call by subclass, only
     *new{ | kind, filePath, attributes |
+
         ^super.newCopyArgs(kind, filePath)
               .initMetaDataFromAttributes(attributes)
     }
 
     initMetaDataFromAttributes{ | attributes |
 
+        "=== Loaded Attributes ===".postln;
+        attributes.keysValuesDo{ | key, value |
+            key.post;
+            ": ".post;
+            value.postln;
+        };
+        "=========================".postln;
+        "... Global_Conventions: ".post;
+        attributes[\GLOBAL_Conventions].post;
+        " ...".postln;
         globalConventions = attributes[\GLOBAL_Conventions];
         globalSofaConventions = attributes[\GLOBAL_SOFAConventions];
         globalSofaConventionsVersion = attributes[\GLOBAL_SOFAConventionsVersion];

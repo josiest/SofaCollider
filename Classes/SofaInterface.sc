@@ -41,13 +41,13 @@ SofaInterface {
             hrtfPath,
             // get all the global attributes, as well as the specific attributes
             attributeNames[\Common_MetaData]
-                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
+                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) } ++
 
             attributeNames[convention.asSymbol ++ \_MetaData]
-                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
+                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) } ++
 
             attributeNames[convention.asSymbol ++ \_SpatialData]
-                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) })
+                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }
         )
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
@@ -76,7 +76,7 @@ SofaInterface {
     }
 
     *globalAttributeAsSymbol{ | name |
-        ^name.replace(":", "_");
+        ^name.replace(":", "_").asSymbol;
     }
 
     // Get the source vector of a given index from a SOFA object.
@@ -106,8 +106,6 @@ SofaInterface {
     *closestSourceFromVector { | hrtfPath, vec, precision = 10 |
 
         // the octave source code that computes what we want
-        "path in function: ".post;
-        hrtfPath.postln;
         ^SofaInterface.prRunSOFAroutine(hrtfPath, [
 
             "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);"
