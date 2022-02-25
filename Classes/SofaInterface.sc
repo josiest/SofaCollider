@@ -3,33 +3,80 @@ SofaInterface {
     classvar <rootDir;
     classvar <srcDir;
     classvar <conventionsDir;
-    classvar <attributes;
+    classvar <attributeNames;
 
     *initClass{
         rootDir = "/home/josiest/sofa/API_MO/";
         srcDir = rootDir ++ "API_MO/";
         conventionsDir = srcDir ++ "conventions/";
-        attributes = [
-            \global ->
-                ["GLOBAL_Conventions", "GLOBAL_SOFAConventions",
-                 "GLOBAL_SOFAConventionsVersion", "GLOBAL_APIName",
-                 "GLOBAL_APIVersion", "GLOBAL_DataType", "GLOBAL_RoomType",
-                 "GLOBAL_DateCreated", "GLOBAL_DateModified",
-                 "GLOBAL_AuthorContact", "GLOBAL_Organization",
-                 "GLOBAL_License", "GLOBAL_Title"],
-        
-            \SimpleFreeFieldHRIR ->
-                ["GLOBAL_DatabaseName", "GLOBAL_ListenerShortName",
-                 "ListenerPosition:Type", "ListenerPosition:Units",
+        attributeNames = [
+            \Common_MetaData ->
+                ["GLOBAL:Conventions", "GLOBAL:Version",
+                 "GLOBAL:SOFAConventions", "GLOBAL:SOFAConventionsVersion",
+                 "GLOBAL:APIName", "GLOBAL:APIVersion",
+                 "GLOBAL:DataType", "GLOBAL:RoomType",
+                 "GLOBAL:DateCreated", "GLOBAL:DateModified",
+                 "GLOBAL:AuthorContact", "GLOBAL:Organization",
+                 "GLOBAL:License", "GLOBAL:Title"],
+
+            \SimpleFreeFieldHRIR_MetaData ->
+                ["GLOBAL:DatabaseName", "GLOBAL:ListenerShortName"],
+
+            \SimpleFreeFieldHRIR_SpatialData ->
+                ["ListenerPosition:Type", "ListenerPosition:Units",
                  "ReceiverPosition:Type", "ReceiverPosition:Units",
                  "SourcePosition:Type", "SourcePosition:Units",
                  "EmitterPosition:Type", "EmitterPosition:Units",
-                 "ListenerView:Type", "ListenerView:Units",
-                 "Data.SamplingRate:Units"
-             ]
+                 "ListenerView:Type", "ListenerView:Units"]
         ].asDict;
     }
-    
+
+    *loadSofaMetaData{ | hrtfPath, convention |
+
+        var output, global, sofaObj;
+
+        // get the values of all the attributes given
+        ^SofaInterface.prRunSOFAroutine(
+
+            hrtfPath,
+            // get all the global attributes, as well as the specific attributes
+            attributeNames[\Common_MetaData]
+                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
+
+            attributeNames[convention.asSymbol ++ \_MetaData]
+                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
+
+            attributeNames[convention.asSymbol ++ \_SpatialData]
+                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) })
+        )
+        // there might be trailing newlines, so strip before splitting
+        .stripWhiteSpace.split($\n)
+        // convert each line into an association: attribute name to its value
+        .collect{ | line |
+            var components;
+            components = line
+                .split(SofaInterface.prOctaveAttributeDelimeter)
+                .collect{ | x | x.stripWhiteSpace };
+
+
+            "... ".post;
+            components[0].post;
+            " ... ".post;
+            components[0].replace(":", "_").post;
+            " ...".postln;
+
+            SofaInterface.globalAttributeAsSymbol(components[0]) -> components[1]
+        }.asDict
+    }
+
+    *attributeAsSymbol{ | name |
+        ^name.replace(":").replace(".").asSymbol;
+    }
+
+    *globalAttributeAsSymbol{ | name |
+        ^name.replace(":", "_");
+    }
+
     // Get the source vector of a given index from a SOFA object.
     //
     // \param hrtfPath the path name to the sofa file to load
@@ -38,13 +85,13 @@ SofaInterface {
     //
     // \return a vector of measurements (azimuth, elevation, radius)
     *sourceVectorFromIndex { | hrtfPath, index, precision = 10 |
-    
+
         // compile the octave source code that computes the source vector
         ^SofaInterface.prRunSOFAroutine(hrtfPath, [
             // get a matrix of source vectors then grab the specified index
             "apv = SOFAcalculateAPV(hrtf);",
             "v = apv(%, :);".format(index),
-    
+
             // print each element (azi, ele, r) separated by commas
             "printf('\\%.%f,\\%.%f,\\%.%f\\n', v(1), v(2), v(3));".format(
                 precision, precision, precision),
@@ -55,7 +102,7 @@ SofaInterface {
 
     // find the closest source position to a given vector
     *closestSourceFromVector { | hrtfPath, vec, precision = 10 |
-    
+
         // the octave source code that computes what we want
         "path in function: ".post;
         hrtfPath.postln;
@@ -72,7 +119,7 @@ SofaInterface {
             if(i == 0, { val.asInteger }, { val.asFloat })
         })
     }
-    
+
     // get the Impulse Response at a given index
     *irFromIndex { | hrtfPath, index, precision = 10 |
     
@@ -86,21 +133,21 @@ SofaInterface {
         // split the data into two columns
         .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
     }
-    
+
     // get th econventions of a sofa file
     *conventionsOfSofaFile { | hrtfPath |
-    
+
         var conventionPath, header, rawData, conventions;
-    
+
         // define the path to the convention file and load the data
         conventionPath = SofaInterface.conventionsDir ++ "/FreeFieldHRIR_1.0.csv";
         // the file extension *says* csv, but the actual files use tab delimeters
         rawData = TabFileReader.read(conventionPath);
-    
+
         // separate the header line from the rest
         header = rawData[0];
         rawData = rawData.copyToEnd(1);
-    
+
         // populate the conventions dictionary
         conventions = List();
         rawData.do{ | line |
@@ -108,40 +155,43 @@ SofaInterface {
                 header[i] -> val.stripWhiteSpace
             }.asDict);
         };
-    
+
         ^conventions
     }
 
+    // create an octave source code line for printing an attribute
     *prPrintOctaveAttribute{ | attr |
-        ^"printf('%:\\%s\\n', hrtf.%);"
-            .format(attr.replace(":"), attr.replace(":", "_"))
+        var delim, octaveAttr;
+        delim = SofaInterface.prOctaveAttributeDelimeter;
+        octaveAttr = SofaInterface.prAsOctaveAttribute(attr);
+
+        ^("printf('" ++         // begin printf
+          "%".format(attr) ++   // insert attribute name to print
+          delim ++              // separate attr name from value
+          "%s" ++               // add specifier for octave formatting
+          "\\n'" ++             // end octave printf string on a newline
+          ", " ++               // begin next printf argument
+          // transform attribute name to octave interface
+          "hrtf.%".format(octaveAttr) ++
+          ");")                 // end printf
     }
 
-    *prLoadSofaMetaData{ | hrtfPath, convention=\SimpleFreeFieldHRIR |
-
-        var output, global, sofaObj;
-
-        // get the values of all the attributes given
-        ^SofaInterface.prRunSOFAroutine(
-
-            hrtfPath,
-            // get all the global conventions, as well as the specific convention
-            attributes[\global]
-                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) }) ++
-
-            attributes[convention]
-                .collect({ | attr | SofaInterface.prPrintOctaveAttribute(attr) })
-        )
-        // there might be trailing newlines, so strip before splitting
-        .stripWhiteSpace.split($\n)
-        // convert each line into an association: attribute name to its value
-        .collect{ | line |
-            var components;
-            components = line.split($:).collect{ | x | x.stripWhiteSpace };
-            components[0].replace(":").replace(".").asSymbol -> components[1]
-        }.asDict
+    // abstract the octave attribute name-to-value printing
+    // delimeter for ease of changing it
+    *prOctaveAttributeDelimeter{
+        // currently a single space
+        // because sofa convention attributes don't have spaces
+        //
+        // however, sofa attribute values may have spaces - so we'll need to
+        // only split at the first space
+        ^$ ;
     }
-    
+
+    // convert an attribute name to the octave sofa object interface
+    *prAsOctaveAttribute{ | attr |
+        ^attr.replace(":", "_");
+    }
+
     // Run octave code on a SOFA object using the SOFA API.
     //
     // \param hrtfPath the path name to the sofa file to load
@@ -152,11 +202,11 @@ SofaInterface {
     *prRunSOFAroutine { | hrtfPath, source |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
-    
+
         // the name of the octave command and the temporary source file
         octaveCmd = "octave";
         sourceFile = "temp.m";
-    
+
         // define the source code to run:
         //   first we'll need to bootstrap some things
         allSourceCode = [
@@ -164,22 +214,22 @@ SofaInterface {
             // add the path to the sofa M/O repo and initialize
             "addpath('%');".format(SofaInterface.srcDir),
             "SOFAstart;",
-    
+
             // load the specified sofa file and mark the beginning of output
             "hrtf = SOFAload('%');".format(hrtfPath),
             "printf('SuperCollider Data Interface\\n');",
-    
+
         // now we can append the specified source code
         ] ++ source;
-    
+
         // write the source code to the temporary file
         File.use(sourceFile, "w", { | fp |
             allSourceCode.do{ | line | fp.write(line ++ "\n"); };
         });
-    
+
         // run the octave command, and pipe input into it
         pipe = Pipe.argv([octaveCmd, sourceFile], "r");
-    
+
         // scan the output until we find the special tag
         lastLine = pipe.getLine; nextLine = pipe.getLine;
         while ({ lastLine != "SuperCollider Data Interface" }, {
@@ -190,11 +240,11 @@ SofaInterface {
             output = output ++ nextLine ++ "\n";
             nextLine = pipe.getLine;
         });
-    
+
         // clean up and return the output
         pipe.close;
         File.delete(sourceFile);
-    
+
         ^output
     }
 }
