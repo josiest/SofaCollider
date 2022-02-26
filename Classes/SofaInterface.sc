@@ -170,20 +170,24 @@ SofaInterface {
     }
 
     // create an octave source code line for printing an attribute
-    *prPrintOctaveAttribute{ | attr |
+    *prPrintOctaveAttribute{ | name |
         var delim, octaveAttr;
         delim = SofaInterface.prOctaveAttributeDelimeter;
-        octaveAttr = SofaInterface.prAsOctaveAttribute(attr);
+        octaveAttr = SofaInterface.prAsOctaveAttribute(name);
 
-        ^("printf('" ++         // begin printf
-          "%".format(attr) ++   // insert attribute name to print
-          delim ++              // separate attr name from value
-          "%s" ++               // add specifier for octave formatting
-          "\\n'" ++             // end octave printf string on a newline
-          ", " ++               // begin next printf argument
-          // transform attribute name to octave interface
-          "hrtf.%".format(octaveAttr) ++
-          ");")                 // end printf
+          // start by printing the attribute's name 
+        ^("printf('%".format(name) ++
+
+          // separate the name from the actual octave data
+          // by a pre-specified delimeter
+          delim ++
+
+          "%s" ++   // add specifier for octave formatting
+          "\\n'" ++ // end octave printf string on a newline
+
+          // pass the format arg to the octave printf
+          // which will be an attribute of a sofa object
+          ", hrtf.%".format(octaveAttr) ++ ");")
     }
 
     // abstract the octave attribute name-to-value printing
