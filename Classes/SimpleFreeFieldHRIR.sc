@@ -22,7 +22,8 @@ SimpleFreeFieldHRIR : SofaConvention {
     *newFromFile{ | filePath |
         var attributes;
         attributes = SofaInterface.loadSofaMetaData(filePath);
-        ^super.new(filePath, attributes)
+        ^super.new(filePath)
+              .initMetaDataFromAttributes(attributes)
               .initSimpleFreeFieldHRIRFromAttributes(attributes);
     }
 

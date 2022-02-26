@@ -38,9 +38,9 @@
 "metaData.organization: ".post; ~sofaObj.metaData.organization.postln;
 "metaData.license: ".post; ~sofaObj.metaData.license.postln;
 "metaData.title: ".post; ~sofaObj.metaData.title.postln;
+"metaData.databaseName: ".post; ~sofaObj.metaData.databaseName.postln;
+"metaData.listenerShortName: ".post; ~sofaObj.metaData.listenerShortName.postln;
 
-"globalDatabaseName: ".post; ~sofaObj.globalDatabaseName.postln;
-"globalListenerShortName: ".post; ~sofaObj.globalListenerShortName.postln;
 "listenerPositionType: ".post; ~sofaObj.listenerPositionType.postln;
 "listenerPositionUnits: ".post; ~sofaObj.listenerPositionUnits.postln;
 "receiverPositionType: ".post; ~sofaObj.receiverPositionType.postln;

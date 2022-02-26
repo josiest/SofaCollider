@@ -1,0 +1,63 @@
+diff --git a/Classes/SOFAConvention.sc b/Classes/SOFAConvention.sc
+index 7bae0c2..c3d5bdb 100644
+--- a/Classes/SOFAConvention.sc
++++ b/Classes/SOFAConvention.sc
+@@ -1,27 +1,40 @@
+ SofaConvention {
++    var <kind;
+     var <dataFile;
+-    var <metaData;
+ 
+-    // call by subclass, only
+-    // initialize a convention type from loaded attributes and 
+-    *new{ | subclass, filePath, attributes |
+-
+-        var attributeNames;
++    var <globalConventions;
++    var <globalSofaConventions;
++    var <globalSofaConventionsVersion;
++    var <globalAPIName;
++    var <globalAPIVersion;
++    var <globalDataType;
++    var <globalRoomType;
++    var <globalDateCreated;
++    var <globalDateModified;
++    var <globalAuthorContact;
++    var <globalOrganization;
++    var <globalLicense;
++    var <globalTitle;
+ 
+-        // While all sofa conventions should have a set of common global
+-        // attributes, some subclasses may have additional global attirbutes
+-        attributeNames = SofaInterface.attributeNames[\Common] ++
+-                         SofaInterface.attributeNames[\Global ++ subclass];
+-
+-        ^super.newCopyArgs(filePath)
+-              .prInitMetaDataFromAttributes(attributeNames, attributes);
++    // call by subclass, only
++    *new{ | kind, filePath, attributes |
++        ^super.newCopyArgs(kind, filePath).initFromAttributes(attributes)
+     }
+ 
+-    prInitMetaDataFromAttributes{ | attributeNames, allAttributes |
++    initFromAttributes{ | attributes |
+ 
+-        metaData = attributeNames
+-            .collect(SofaInterface.globalAttributeAsSymbol)
+-            .collect{ | name | name -> allAttributes[name] }
+-            .asDict.know_(true); // indexing can be done through messaging
++        globalConventions = attributes[\GLOBAL_Conventions];
++        globalSofaConventions = attributes[\GLOBAL_SOFAConventions];
++        globalSofaConventionsVersion = attributes[\GLOBAL_SOFAConventionsVersion];
++        globalAPIName = attributes[\GLOBAL_APIName];
++        globalAPIVersion = attributes[\GLOBAL_APIVersion];
++        globalDataType = attributes[\GLOBAL_DataType];
++        globalRoomType = attributes[\GLOBAL_RoomType];
++        globalDateCreated = attributes[\GLOBAL_DateCreated];
++        globalDateModified = attributes[\GLOBAL_DateModified];
++        globalAuthorContact = attributes[\GLOBAL_AuthorContact];
++        globalOrganization = attributes[\GLOBAL_Organization];
++        globalLicense = attributes[\GLOBAL_License];
++        globalTitle = attributes[\GLOBAL_Title];
+     }
+ }
