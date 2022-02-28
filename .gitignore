@@ -30,10 +30,13 @@ cmake-build-*
 venv
 __pycache__
 
-#build directories
+# build directories
 /build*
 
 *~
 *.orig
-#vim swap files
+# vim swap files
 .*.sw?
+
+# --- git ---
+*diff # sometimes making diff files is useful for merging
