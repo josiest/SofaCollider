@@ -44,11 +44,9 @@ SofaInterface {
         ^SofaInterface.prRunSofaroutine(
 
             hrtfPath,
-            // get all the global attributes, as well as the specific attributes
-            attributeNames[\Common_MetaData]
-                .collect{ | attr | SofaInterface.prPrintMetaDataAttribute(attr) } ++
 
-            attributeNames[(convention++\_MetaData).asSymbol]
+            // print all global attributes, as well as specific attributes
+            SofaInterface.metaDataAttributeNames(convention)
                 .collect{ | attr | SofaInterface.prPrintMetaDataAttribute(attr) }// ++
 
             // attributeNames[(convention++\_SpatialData).asSymbol]
