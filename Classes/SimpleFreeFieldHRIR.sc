@@ -23,11 +23,10 @@ SimpleFreeFieldHRIR : SofaConvention {
         var attributes;
 
         // load everything from the sofa object except the data
-        attributes = SofaInterface
-            .loadSofaMetaData(filePath, \SimpleFreeFieldHRIR);
+        attributes = SofaInterface.loadMetadata(filePath, \SimpleFreeFieldHRIR);
 
         ^super.new(filePath)
-              .initMetaDataFromAttributes(attributes)
+              .initMetadataFromAttributes(attributes)
               .initSimpleFreeFieldHRIRFromAttributes(attributes);
     }
 

@@ -10,7 +10,7 @@ SofaInterface {
         srcDir = rootDir ++ "API_MO/";
         conventionsDir = srcDir ++ "conventions/";
         attributeNames = [
-            \Common_MetaData ->
+            \Common_Metadata ->
                 ["GLOBAL:Conventions", "GLOBAL:Version",
                  "GLOBAL:SOFAConventions", "GLOBAL:SOFAConventionsVersion",
                  "GLOBAL:APIName", "GLOBAL:APIVersion",
@@ -19,24 +19,27 @@ SofaInterface {
                  "GLOBAL:AuthorContact", "GLOBAL:Organization",
                  "GLOBAL:License", "GLOBAL:Title"],
 
-            \SimpleFreeFieldHRIR_MetaData ->
+            \SimpleFreeFieldHRIR_Metadata ->
                 ["GLOBAL:DatabaseName", "GLOBAL:ListenerShortName"],
 
-            \SimpleFreeFieldHRIR_SpatialData ->
-                ["ListenerPosition:Type", "ListenerPosition:Units",
-                 "ReceiverPosition:Type", "ReceiverPosition:Units",
-                 "SourcePosition:Type", "SourcePosition:Units",
-                 "EmitterPosition:Type", "EmitterPosition:Units",
-                 "ListenerView:Type", "ListenerView:Units"]
+            \SimpleFreeFieldHRIR_SpatialArrays ->
+                ["ListenerPosition",
+                 "ReceiverPosition",
+                 "SourcePosition",
+                 "EmitterPosition",
+                 "ListenerView"]
         ].asDict;
     }
 
-    *metaDataAttributeNames{ | convention |
-        ^(SofaInterface.attributeNames[\Common_MetaData] ++
-          SofaInterface.attributeNames[(convention++\_MetaData).asSymbol]);
+    *metadataNames{ | convention |
+        ^(SofaInterface.attributeNames[\Common_Metadata] ++
+          SofaInterface.attributeNames[(convention++\_Metadata).asSymbol]);
     }
 
-    *loadSofaMetaData{ | hrtfPath, convention |
+    *spatialArrayNames{ | convention |
+    }
+
+    *loadMetadata{ | hrtfPath, convention |
 
         var output, global, sofaObj;
 
@@ -45,12 +48,13 @@ SofaInterface {
 
             hrtfPath,
 
-            // print all global attributes, as well as specific attributes
-            SofaInterface.metaDataAttributeNames(convention)
-                .collect{ | attr | SofaInterface.prPrintMetaDataAttribute(attr) }// ++
+            // create octave source code strings that print all metadata attributes,
+            // both common and specific to the subclass
+            SofaInterface.metadataNames(convention)
+                .collect{ | attr | SofaInterface.prPrintMetadata(attr) }// ++
 
-            // attributeNames[(convention++\_SpatialData).asSymbol]
-            //     .collect{ | attr | SofaInterface.prPrintSpatialDataAttribute(attr) }
+            // SofaInterface.spatialArrayNames(convention)
+            //     .collect{ | attr | SofaInterface.prPrintSpatialArray(attr) }
         )
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
@@ -176,10 +180,10 @@ SofaInterface {
     }
 
     // create an octave source code line for printing an attribute
-    *prPrintMetaDataAttribute{ | name |
+    *prPrintMetadata{ | name |
         var delim, octaveAttr;
         delim = SofaInterface.prOctaveAttributeDelimeter;
-        octaveAttr = SofaInterface.prAsOctaveAttribute(name);
+        octaveAttr = SofaInterface.prMetadataAsOctaveAttribute(name);
 
           // start by printing the attribute's name 
         ^("printf('%".format(name) ++
@@ -188,7 +192,7 @@ SofaInterface {
           // by a pre-specified delimeter
           delim ++
 
-          "%s" ++   // add specifier for octave formatting
+          "%s" ++   // format the attribute value in octave
           "\\n'" ++ // end octave printf string on a newline
 
           // pass the format arg to the octave printf
@@ -207,9 +211,14 @@ SofaInterface {
         ^$ ;
     }
 
-    // convert an attribute name to the octave sofa object interface
-    *prAsOctaveAttribute{ | attr |
-        ^attr.replace(":", "_");
+    // convert a metadata name to a octave member-field name
+    *prMetadataAsOctaveAttribute{ | name |
+        ^name.replace(":", "_");
+    }
+    // parse a spatial array name into its respective octave member-field names
+    *prSpatialArrayOctaveAttributes{ | name |
+        ^[] // TODO: figure out how octave gets spatial data information
+        .asDict.know_(true);
     }
 
     // Run octave code on a SOFA object using the SOFA API.
