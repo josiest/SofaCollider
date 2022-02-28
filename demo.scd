@@ -24,6 +24,7 @@
 "sofa object: ".postln;
 ~sofaObj = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 
+"== Loaded meta data ==".postln;
 "metaData.conventions: ".post; ~sofaObj.metaData.conventions.postln;
 "metaData.sofaConventions: ".post; ~sofaObj.metaData.sofaConventions.postln;
 "metaData.sofaConventionsVersion: ".post;

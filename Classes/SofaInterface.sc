@@ -43,11 +43,11 @@ SofaInterface {
             attributeNames[\Common_MetaData]
                 .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) } ++
 
-            attributeNames[convention.asSymbol ++ \_MetaData]
-                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) } ++
+            attributeNames[(convention.asSymbol ++ \_MetaData).asSymbol]
+                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }// ++
 
-            attributeNames[convention.asSymbol ++ \_SpatialData]
-                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }
+            // attributeNames[convention.asSymbol ++ \_SpatialData]
+            //     .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }
         )
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
