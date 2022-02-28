@@ -1,6 +1,7 @@
+// A super class for initializing common data in all sofa conventions
 SofaConvention {
-    var <dataFile;
-    var <metaData;
+    var <dataFile;  // where the sofa is object saved on disk
+    var <metaData;  // the common and specific global meta data
 
     // call by subclass, only
     // initialize a convention type from loaded attributes and 
@@ -9,26 +10,25 @@ SofaConvention {
     }
 
     initMetaDataFromAttributes{ | attributes |
-        var subclass, subclassMetaData, metaDataNames;
+        var conventionAttributeName;
 
-        // get the subclass name as a symbol
-        subclass = SofaInterface.globalAttributeAsSymbol("GLOBAL:SOFAConventions");
-        subclassMetaData = (attributes[subclass] ++ \_MetaData).asSymbol;
+        // get the key to acces the specific convention name from attributes
+        conventionAttributeName = SofaInterface
+            .globalAttributeAsSymbol("GLOBAL:SOFAConventions");
 
-        // get all global metadata attribute names
-        metaDataNames = SofaInterface.attributeNames[\Common_MetaData] ++
-                        SofaInterface.attributeNames[subclassMetaData];
-
-        // transform each global attribute name
+        // transform each meta data attribute name
         // into a mapping of field-name to attribute value
-        metaData = metaDataNames.collect{ | attr |
-            var fieldName, attrSymbol;
+        metaData = SofaInterface
+            .metaDataAttributeNames(attributes[conventionAttributeName])
+            .collect{ | attr |
 
-            fieldName = SofaInterface.globalAttributeAsField(attr);
-            attrSymbol = SofaInterface.globalAttributeAsSymbol(attr);
+                var fieldName, attrSymbol;
 
-            fieldName -> attributes[attrSymbol]
-        }
-        .asDict.know_(true); // indexing can be done through messaging
+                fieldName = SofaInterface.globalAttributeAsField(attr);
+                attrSymbol = SofaInterface.globalAttributeAsSymbol(attr);
+
+                fieldName -> attributes[attrSymbol]
+            }
+            .asDict.know_(true); // indexing can be done through messaging
     }
 }

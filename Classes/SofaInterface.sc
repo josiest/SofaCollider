@@ -31,23 +31,28 @@ SofaInterface {
         ].asDict;
     }
 
+    *metaDataAttributeNames{ | convention |
+        ^(SofaInterface.attributeNames[\Common_MetaData] ++
+          SofaInterface.attributeNames[(convention++\_MetaData).asSymbol]);
+    }
+
     *loadSofaMetaData{ | hrtfPath, convention |
 
         var output, global, sofaObj;
 
         // get the values of all the attributes given
-        ^SofaInterface.prRunSOFAroutine(
+        ^SofaInterface.prRunSofaroutine(
 
             hrtfPath,
             // get all the global attributes, as well as the specific attributes
             attributeNames[\Common_MetaData]
-                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) } ++
+                .collect{ | attr | SofaInterface.prPrintMetaDataAttribute(attr) } ++
 
-            attributeNames[(convention.asSymbol ++ \_MetaData).asSymbol]
-                .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }// ++
+            attributeNames[(convention++\_MetaData).asSymbol]
+                .collect{ | attr | SofaInterface.prPrintMetaDataAttribute(attr) }// ++
 
-            // attributeNames[convention.asSymbol ++ \_SpatialData]
-            //     .collect{ | attr | SofaInterface.prPrintOctaveAttribute(attr) }
+            // attributeNames[(convention++\_SpatialData).asSymbol]
+            //     .collect{ | attr | SofaInterface.prPrintSpatialDataAttribute(attr) }
         )
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
@@ -99,7 +104,7 @@ SofaInterface {
     *sourceVectorFromIndex { | hrtfPath, index, precision = 10 |
 
         // compile the octave source code that computes the source vector
-        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
+        ^SofaInterface.prRunSofaroutine(hrtfPath, [
             // get a matrix of source vectors then grab the specified index
             "apv = SOFAcalculateAPV(hrtf);",
             "v = apv(%, :);".format(index),
@@ -115,12 +120,15 @@ SofaInterface {
     // find the closest source position to a given vector
     *closestSourceFromVector { | hrtfPath, vec, precision = 10 |
 
-        // the octave source code that computes what we want
-        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
+        ^SofaInterface.prRunSofaroutine(hrtfPath, [
 
+            // find the closest data points to the input vector
+            // and unpack them into octave variables for easy formatting
             "[idx, azi, ele, r] = SOFAfind(hrtf, %, %, %);"
             .format(vec[0], vec[1], vec[2]),
 
+            // print the variables on a comma-seprated line
+            // with specified precision for floating-points
             "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);"
             .format(precision, precision, precision),
         ])
@@ -134,7 +142,7 @@ SofaInterface {
     *irFromIndex { | hrtfPath, index, precision = 10 |
     
         // the octave source code that gets the impulse response data
-        ^SofaInterface.prRunSOFAroutine(hrtfPath, [
+        ^SofaInterface.prRunSofaroutine(hrtfPath, [
             "data = reshape(hrtf.Data.IR(%, :, :), [200, 2]);".format(index),
             "printf('%s', mat2str(data));"
         ])
@@ -170,7 +178,7 @@ SofaInterface {
     }
 
     // create an octave source code line for printing an attribute
-    *prPrintOctaveAttribute{ | name |
+    *prPrintMetaDataAttribute{ | name |
         var delim, octaveAttr;
         delim = SofaInterface.prOctaveAttributeDelimeter;
         octaveAttr = SofaInterface.prAsOctaveAttribute(name);
@@ -213,7 +221,7 @@ SofaInterface {
     //
     // The source code should refer to the SOFA object file as `hrtf`. Any output
     // by the source code will be captured and returned as a string.
-    *prRunSOFAroutine { | hrtfPath, source |
+    *prRunSofaroutine { | hrtfPath, source |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
 
