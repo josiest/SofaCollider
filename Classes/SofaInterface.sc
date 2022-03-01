@@ -23,22 +23,22 @@ SofaInterface {
                 ["GLOBAL:DatabaseName", "GLOBAL:ListenerShortName"],
 
             \SimpleFreeFieldHRIR_SpatialArrays ->
-                ["ListenerPosition",
-                 "ReceiverPosition",
-                 "SourcePosition",
-                 "EmitterPosition",
-                 "ListenerView"]
+                ["ListenerPosition", "ReceiverPosition", "SourcePosition",
+                 "EmitterPosition", "ListenerView"]
         ].asDict;
     }
 
+    // get all the attribute names of the global metadata
     *metadataNames{ | convention |
         ^(SofaInterface.attributeNames[\Common_Metadata] ++
           SofaInterface.attributeNames[(convention++\_Metadata).asSymbol]);
     }
 
+    // get all the attribute names ofthe spatial arrays
     *spatialArrayNames{ | convention |
     }
 
+    // load all metadata of a sofa object from file
     *loadMetadata{ | hrtfPath, convention |
 
         var output, global, sofaObj;
@@ -78,14 +78,17 @@ SofaInterface {
         }.asDict
     }
 
+    // convert a normal attribute name to a unique symbol for dict keys
     *attributeAsSymbol{ | name |
         ^name.replace(":").replace(".").asSymbol;
     }
 
+    // convert a global attribute name to a unique symbol for dict keys
     *globalAttributeAsSymbol{ | name |
         ^name.replace(":", "_").asSymbol;
     }
 
+    // convert a global attribute name to a supercollider-field-compatible name
     *globalAttributeAsField{ | name |
         var attr = name.split($:)[1]; // get rid of "GLOBAL:"
 
@@ -245,7 +248,7 @@ SofaInterface {
             "SOFAstart;",
 
             // load the specified sofa file and mark the beginning of output
-            "hrtf = SOFAload('%');".format(hrtfPath),
+            "hrtf = SOFAload('%', 'nodata');".format(hrtfPath),
             "printf('SuperCollider Data Interface\\n');",
 
         // now we can append the specified source code
