@@ -59,23 +59,8 @@ SofaInterface {
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
         // convert each line into an association: attribute name to its value
-        .collect{ | line |
-            var components, attrName, attrValue;
-            components = line
-                .split(SofaInterface.prOctaveAttributeDelimeter)
-                .collect{ | x | x.stripWhiteSpace };
-
-            attrName = SofaInterface.globalAttributeAsSymbol(components[0]);
-
-            // there may be spaces in the output value
-            // so we'll need to undo the string split
-            attrValue = components
-                .copyToEnd(1)   // take the rest of the array past the first elem
-                .join($ );      // restore the original string
-
-            attrName -> attrValue
-
-        }.asDict
+        .collect{ | line | SofaInterface.prParseLine }
+        .asDict;
     }
 
     // convert a normal attribute name to a unique symbol for dict keys
@@ -182,10 +167,41 @@ SofaInterface {
         ^conventions
     }
 
+    *prParseLine{ | line |
+        // currently the only thing we're parsing is global metadata
+        // once spatial metadata parsing is set up, this function will call
+        // the respective parse function based off the attribute type
+        ^SofaInterface.prParseMetadata(line)
+    }
+
+    // parse a line of global metadata
+    *prParseMetadata{ | line |
+
+        var delim, components, attrName, attrValue;
+        delim = SofaInterface.prPrintingDelimeter;
+
+        // split the line by the printing delimeter
+        // each attribute output follows the format
+        //   <attribute-name><delimeter><attribute-value>
+        components = line.split(delim)
+            .collect{ | x | x.stripWhiteSpace };
+
+        // based on the previously defined format, the 
+        attrName = SofaInterface.globalAttributeAsSymbol(components[0]);
+
+        // there may be spaces in the output value
+        // so we'll need to undo the string split
+        attrValue = components
+            .copyToEnd(1)   // take the rest of the array past the first elem
+            .join(delim);   // restore the original string
+
+        attrName -> attrValue
+    }
+
     // create an octave source code line for printing an attribute
     *prPrintMetadata{ | name |
         var delim, octaveAttr;
-        delim = SofaInterface.prOctaveAttributeDelimeter;
+        delim = SofaInterface.prPrintingDelimeter;
         octaveAttr = SofaInterface.prMetadataAsOctaveAttribute(name);
 
           // start by printing the attribute's name 
@@ -205,7 +221,7 @@ SofaInterface {
 
     // abstract the octave attribute name-to-value printing
     // delimeter for ease of changing it
-    *prOctaveAttributeDelimeter{
+    *prPrintingDelimeter{
         // currently a single space
         // because sofa convention attributes don't have spaces
         //
@@ -220,7 +236,15 @@ SofaInterface {
     }
     // parse a spatial array name into its respective octave member-field names
     *prSpatialArrayOctaveAttributes{ | name |
-        ^[] // TODO: figure out how octave gets spatial data information
+
+        // looking at the source code for SOFAinfo
+        // https://github.com/sofacoustics/API_MO/blob/master/API_MO/SOFAinfo.m
+        // we can see that secondary attributes are accessed by underscores
+        // for example: Obj.ListenerPosition_Units
+
+        ^[\type -> name++"_Type",
+          \units -> name++"_Units",
+          \position -> name]
         .asDict.know_(true);
     }
 
@@ -245,7 +269,7 @@ SofaInterface {
             "warning('off', 'all');",
             // add the path to the sofa M/O repo and initialize
             "addpath('%');".format(SofaInterface.srcDir),
-            "SOFAstart;",
+            "SOFAstart('silent');",
 
             // load the specified sofa file and mark the beginning of output
             "hrtf = SOFAload('%', 'nodata');".format(hrtfPath),
