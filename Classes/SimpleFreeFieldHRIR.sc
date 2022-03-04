@@ -20,10 +20,20 @@ SimpleFreeFieldHRIR : SofaConvention {
     var <dataSamplingRateUnits;
 
     *newFromFile{ | filePath |
-        var attributes;
+        var attributes, convention;
+        var spatialAttributeNames;
 
         // load everything from the sofa object except the data
-        attributes = SofaInterface.loadMetadata(filePath, \SimpleFreeFieldHRIR);
+        convention = \SimpleFreeFieldHRIR;
+        attributes = SofaInterface.loadMetadata(filePath, convention);
+
+        SofaInterface.spatialArrayNames(convention).do{ | name |
+            var key;
+
+            key = SofaInterface.attributeAsSymbol(name);
+            ("== "++key++" ==").postln;
+            attributes[key].postln;
+        };
 
         ^super.new(filePath)
               .initMetadataFromAttributes(attributes)

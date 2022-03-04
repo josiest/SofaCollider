@@ -36,6 +36,7 @@ SofaInterface {
 
     // get all the attribute names ofthe spatial arrays
     *spatialArrayNames{ | convention |
+        ^SofaInterface.attributeNames[(convention++\_SpatialArrays).asSymbol];
     }
 
     // load all metadata of a sofa object from file
@@ -53,13 +54,13 @@ SofaInterface {
             SofaInterface.metadataNames(convention)
                 .collect{ | attr | SofaInterface.prPrintMetadata(attr) }// ++
 
-            // SofaInterface.spatialArrayNames(convention)
-            //     .collect{ | attr | SofaInterface.prPrintSpatialArray(attr) }
+            SofaInterface.spatialArrayNames(convention)
+                .collect{ | attr | SofaInterface.prPrintSpatialArray(attr) }
         )
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
         // convert each line into an association: attribute name to its value
-        .collect{ | line | SofaInterface.prParseLine(line) }
+        .collect{ | line | SofaInterface.prParseLine(line, convention) }
         .asDict;
     }
 
@@ -122,7 +123,8 @@ SofaInterface {
             "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);"
             .format(precision, precision, precision),
         ])
-        // split the output into list of values, collect as floats
+        // the first value will be the index, so parse as an integer
+        // the rest of the values will be floating-point
         .split($,).collect({|val, i|
             if(i == 0, { val.asInteger }, { val.asFloat })
         })
@@ -167,17 +169,14 @@ SofaInterface {
         ^conventions
     }
 
-    *prParseLine{ | line |
+    *prParseLine{ | line, convention |
         // currently the only thing we're parsing is global metadata
         // once spatial metadata parsing is set up, this function will call
         // the respective parse function based off the attribute type
-        ^SofaInterface.prParseMetadata(line)
-    }
-
-    // parse a line of global metadata
-    *prParseMetadata{ | line |
 
         var delim, components, attrName, attrValue;
+        var spatialArrayNames;
+
         delim = SofaInterface.prPrintingDelimeter;
 
         // split the line by the printing delimeter
@@ -190,13 +189,43 @@ SofaInterface {
         // the first element after splitting
         attrName = SofaInterface.globalAttributeAsSymbol(components[0]);
 
-        // there may be spaces in the attribute value
+        // there may be printing delimiters in the attribute value
         // so we'll need to undo the string split
         attrValue = components
             .copyToEnd(1)   // take the rest of the array past the first elem
             .join(delim);   // restore the original string
 
+        // parse the attribute value based on its kind
+        spatialArrayNames = SofaInterface.spatialArrayNames(convention);
+        if (spatialArrayNames.includesEqual(components[0]), {
+            attrValue = SofaInterface.prParseSpatialArray(attrValue);
+        });
+
         ^(attrName -> attrValue)
+    }
+
+    // parse a spatial array that's written in a csv file
+    //   prParseSpatialArray assumes the file is meant to be deleted after
+    //   parsing, and deletes the temporary file
+    //
+    // Note: this isn't great design... Ideally we'd want to write and delete
+    //       the temporary file within the same scope.
+    *prParseSpatialArray{ | filename |
+        var data;
+        data = CSVFileReader.readInterpret(filename);
+        File.delete(filename);
+        ^data;
+    }
+
+    // abstract the octave attribute name-to-value printing
+    // delimeter for ease of changing it
+    *prPrintingDelimeter{
+        // currently a single space
+        // because sofa convention attributes don't have spaces
+        //
+        // however, sofa attribute values may have spaces - so we'll need to
+        // only split at the first space
+        ^$ ;
     }
 
     // create an octave source code line for printing an attribute
@@ -220,15 +249,23 @@ SofaInterface {
           ", hrtf.%".format(octaveAttr) ++ ");")
     }
 
-    // abstract the octave attribute name-to-value printing
-    // delimeter for ease of changing it
-    *prPrintingDelimeter{
-        // currently a single space
-        // because sofa convention attributes don't have spaces
-        //
-        // however, sofa attribute values may have spaces - so we'll need to
-        // only split at the first space
-        ^$ ;
+    // create an octave source code line for printing a spatial array
+    *prPrintSpatialArray{ | name |
+        var attr, delim, octaveAttr;
+        delim = SofaInterface.prPrintingDelimeter;
+        attr = SofaInterface.prConventionalSpatialAttributes(name);
+        octaveAttr = SofaInterface.prSpatialArrayOctaveAttributes(name);
+
+        ^("printf(%%%\\n);".format(attr.type, delim, octaveAttr.type) ++
+          "printf(%%%\\n);".format(attr.units, delim, octaveAttr.units) ++
+
+          // write the position array to file
+          "csvwrite('%.csv', hrtf.%);\n".format(name, octaveAttr.position) ++
+
+          // print with standard format:
+          //   <name><delim><value>
+          // where <value> in this case is the csv filename
+          "printf('%%%.csv\\n');".format(attr.position, delim, attr.position))
     }
 
     // convert a metadata name to a octave member-field name
@@ -245,6 +282,13 @@ SofaInterface {
 
         ^[\type -> name++"_Type",
           \units -> name++"_Units",
+          \position -> name]
+        .asDict.know_(true);
+    }
+    // get the conventional attributes associated with a spatial array
+    *prConventionalSpatialAttributes{ | name |
+        ^[\type -> name++":Type",
+          \units -> name++":Units",
           \position -> name]
         .asDict.know_(true);
     }
