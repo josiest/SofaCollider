@@ -59,7 +59,7 @@ SofaInterface {
         // there might be trailing newlines, so strip before splitting
         .stripWhiteSpace.split($\n)
         // convert each line into an association: attribute name to its value
-        .collect{ | line | SofaInterface.prParseLine }
+        .collect{ | line | SofaInterface.prParseLine(line) }
         .asDict;
     }
 
@@ -186,16 +186,17 @@ SofaInterface {
         components = line.split(delim)
             .collect{ | x | x.stripWhiteSpace };
 
-        // based on the previously defined format, the 
+        // based on the previously defined format, the name is
+        // the first element after splitting
         attrName = SofaInterface.globalAttributeAsSymbol(components[0]);
 
-        // there may be spaces in the output value
+        // there may be spaces in the attribute value
         // so we'll need to undo the string split
         attrValue = components
             .copyToEnd(1)   // take the rest of the array past the first elem
             .join(delim);   // restore the original string
 
-        attrName -> attrValue
+        ^(attrName -> attrValue)
     }
 
     // create an octave source code line for printing an attribute
