@@ -56,7 +56,6 @@
 "... metadata.listenerShortName: ".post;
 ~sofaObj.metadata.listenerShortName.postln;
 
-"== Loaded spatial arrays ==".postln;
 // "... listenerPositionType: ".post;
 // ~sofaObj.listenerPositionType.postln;
 // "... listenerPositionUnits: ".post;
@@ -69,6 +68,7 @@
 // ~sofaObj.sourcePositionType.postln;
 // "... sourcePositionUnits: ".post;
 // ~sofaObj.sourcePositionUnits.postln;
+"== Emitter ==".postln;
 "... emitter.isCartesian: ".post;
 ~sofaObj.emitter.isCartesian.postln;
 "... emitter.isSpherical: ".post;
