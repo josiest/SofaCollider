@@ -44,6 +44,13 @@ SofaInterface {
           \position -> name.asSymbol]
         .asDict.know_(true);
     }
+    *listenerAttributeNames{
+        ^[\type -> \ListenerPosition_Type,
+          \units -> \ListenerPosition_Units,
+          \position -> \ListenerPosition,
+          \view -> \ListenerView]
+        .asDict.know_(true);
+    }
 
     // load all metadata of a sofa object from file
     *loadMetadata{ | hrtfPath, convention |

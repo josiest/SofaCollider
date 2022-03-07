@@ -23,7 +23,7 @@
 
 ~sofaObj = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 
-"== Loaded meta data ==".postln;
+"== Global Metadata ==".postln;
 postf("... metadata.conventions: %\n", ~sofaObj.metadata.conventions);
 postf("... metadata.sofaConventions: %\n", ~sofaObj.metadata.sofaConventions);
 postf("... metadata.sofaConventionsVersion: %\n",
@@ -42,30 +42,35 @@ postf("... metadata.databaseName: %\n", ~sofaObj.metadata.databaseName);
 postf("... metadata.listenerShortName: %\n",
       ~sofaObj.metadata.listenerShortName);
 
-// "... listenerPositionType: ".post;
-// ~sofaObj.listenerPositionType.postln;
-// "... listenerPositionUnits: ".post;
-// ~sofaObj.listenerPositionUnits.postln;
+"== Listener ==".postln;
+postf("... listener.isCartesian: %\n", ~sofaObj.listener.isCartesian);
+postf("... listener.isSpherical: %\n", ~sofaObj.listener.isSpherical);
+postf("... listener.units: %\n", ~sofaObj.listener.units);
+postf("... listener.position: %\n", ~sofaObj.listener.position);
+postf("... listener.view: %\n", ~sofaObj.listener.view);
+
 "== Receiver ==".postln;
 postf("... receiver.isCartesian: %\n", ~sofaObj.receiver.isCartesian);
 postf("... receiver.isSpherical: %\n", ~sofaObj.receiver.isSpherical);
 postf("... receiver.units: %\n", ~sofaObj.receiver.units);
 postf("... receiver.left: %\n", ~sofaObj.receiver.left);
 postf("... receiver.right: %\n", ~sofaObj.receiver.right);
-// "... sourcePositionType: ".post;
-// ~sofaObj.sourcePositionType.postln;
-// "... sourcePositionUnits: ".post;
-// ~sofaObj.sourcePositionUnits.postln;
+
+"== Source ==".postln;
+postf("... source.isCartesian: %\n", ~sofaObj.source.isCartesian);
+postf("... source.isSpherical: %\n", ~sofaObj.source.isSpherical);
+postf("... source.units: %\n", ~sofaObj.source.units);
+postf("... source.positions.size: %\n", ~sofaObj.source.positions.size);
+postf("... source.positions[0]: %\n", ~sofaObj.source.positions[0]);
+postf("... source.positions[%]: %\n",
+      ~sofaObj.source.positions.size-1,
+      ~sofaObj.source.positions[~sofaObj.source.positions.size-1]);
+
 "== Emitter ==".postln;
 postf("... emitter.isCartesian: %\n", ~sofaObj.emitter.isCartesian);
 postf("... emitter.isSpherical: %\n", ~sofaObj.emitter.isSpherical);
 postf("... emitter.units: %\n", ~sofaObj.emitter.units);
 postf("... emitter.position: %\n", ~sofaObj.emitter.position);
-// "... listenerViewPositionType: ".post;
-// ~sofaObj.listenerViewType.postln;
-// "... listenerViewPositionUnits: ".post;
-// ~sofaObj.listenerViewUnits.postln;
-// "... dataSamplingRateUnits: ".post;
-// ~sofaObj.dataSamplingRateUnits.postln;
+
 0.exit;
 )

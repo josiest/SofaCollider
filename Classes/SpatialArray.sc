@@ -3,7 +3,7 @@ SpatialArray {
     var <isSpherical;
     var <units;
 
-    *new{ | coordinateType, unitType, positionVals |
+    *new{ | coordinateType, unitType |
 
         ^super.newCopyArgs(coordinateType.toLower == "cartesian",
                            coordinateType.toLower == "spherical",
