@@ -2,8 +2,7 @@ SimpleFreeFieldHRIR : SofaConvention {
     var <listenerPositionType;
     var <listenerPositionUnits;
 
-    var <receiverPositionType;
-    var <receiverPositionUnits;
+    var <receiver;
 
     var <sourcePositionType;
     var <sourcePositionUnits;
@@ -23,6 +22,7 @@ SimpleFreeFieldHRIR : SofaConvention {
 
         ^super.new(filePath)
               .initMetadataFromAttributes(attributes)
+              .initReceiverFromAttributes(attributes)
               .initEmitterFromAttributes(attributes);
     }
 
@@ -30,6 +30,12 @@ SimpleFreeFieldHRIR : SofaConvention {
     }
 
     initReceiverFromAttributes{ | attributes |
+        var attrNames;
+
+        attrNames = SofaInterface.spatialAttributeNames(\ReceiverPosition);
+        receiver = SpatialArray(attributes[attrNames.type],
+                                attributes[attrNames.units],
+                                attributes[attrNames.position]);
     }
 
     initSourceFromAttributes{ | attributes |
