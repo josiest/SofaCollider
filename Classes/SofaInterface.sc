@@ -38,6 +38,12 @@ SofaInterface {
     *spatialArrayNames{ | convention |
         ^SofaInterface.attributeNames[(convention++\_SpatialArrays).asSymbol];
     }
+    *spatialAttributeNames{ | name |
+        ^[\type -> (name++\_Type).asSymbol,
+          \units -> (name++\_Units).asSymbol,
+          \position -> name.asSymbol]
+        .asDict.know_(true);
+    }
 
     // load all metadata of a sofa object from file
     *loadMetadata{ | hrtfPath, convention |
@@ -257,8 +263,8 @@ SofaInterface {
         attr = SofaInterface.prConventionalSpatialAttributes(name);
         octaveAttr = SofaInterface.prSpatialArrayOctaveAttributes(name);
 
-        ^("printf('%%%\\n');\n".format(attr.type, delim, octaveAttr.type) ++
-          "printf('%%%\\n');\n".format(attr.units, delim, octaveAttr.units) ++
+        ^(SofaInterface.prPrintMetadata(attr.type)++"\n"++
+          SofaInterface.prPrintMetadata(attr.units)++"\n"++
 
           // write the position array to file
           "csvwrite('%.csv', hrtf.%);\n".format(name, octaveAttr.position) ++

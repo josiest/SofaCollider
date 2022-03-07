@@ -1,7 +1,4 @@
 SimpleFreeFieldHRIR : SofaConvention {
-    var <globalDatabaseName;
-    var <globalListenerShortName;
-
     var <listenerPositionType;
     var <listenerPositionUnits;
 
@@ -11,13 +8,10 @@ SimpleFreeFieldHRIR : SofaConvention {
     var <sourcePositionType;
     var <sourcePositionUnits;
 
-    var <emitterPositionType;
-    var <emitterPositionUnits;
+    var <emitter;
 
     var <listenerViewType;
     var <listenerViewUnits;
-
-    var <dataSamplingRateUnits;
 
     *newFromFile{ | filePath |
         var attributes, convention;
@@ -40,23 +34,41 @@ SimpleFreeFieldHRIR : SofaConvention {
 
         ^super.new(filePath)
               .initMetadataFromAttributes(attributes)
-              .initSimpleFreeFieldHRIRFromAttributes(attributes);
+              .initEmitterFromAttributes(attributes);
     }
 
-    initSimpleFreeFieldHRIRFromAttributes{ | attributes |
+    initListenerFromAttributes{ | attributes |
+    }
 
-        globalDatabaseName = attributes[\GLOBAL_DatabaseName];
-        globalListenerShortName = attributes[\GLOBAL_ListenerShortName];
-        listenerPositionType = attributes[\ListenerPositionType];
-        listenerPositionUnits = attributes[\ListenerPositionUnits];
-        receiverPositionType = attributes[\ReceiverPositionType];
-        receiverPositionUnits = attributes[\ReceiverPositionUnits];
-        sourcePositionType = attributes[\SourcePositionType];
-        sourcePositionUnits = attributes[\SourcePositionUnits];
-        emitterPositionType = attributes[\EmitterPositionType];
-        emitterPositionUnits = attributes[\EmitterPositionUnits];
-        listenerViewType = attributes[\ListenerViewType];
-        listenerViewUnits = attributes[\ListenerViewUnits];
-        dataSamplingRateUnits = attributes[\DataSamplingRateUnits];
+    initReceiverFromAttributes{ | attributes |
+    }
+
+    initSourceFromAttributes{ | attributes |
+    }
+
+    initEmitterFromAttributes{ | attributes |
+        var attrNames;
+
+        "== Initializing Emitter ==".postln;
+
+        attrNames = SofaInterface.spatialAttributeNames(\EmitterPosition);
+        if (attributes.includesKey(attrNames.type), {
+            ("... "++attrNames.type++" exists in attributes").postln;
+        }, {
+            ("... "++attrNames.type++" doesn't exist in attributes!").postln;
+        });
+        "... coordinate type".postln
+        ("...... key: "++attrNames.type).postln;
+        ("...... value: "++attributes[attrNames.type]).postln;
+        "... unit type".postln
+        ("...... key: "++attrNames.units).postln;
+        ("...... value: "++attributes[attrNames.units]).postln;
+        attributes.keysValuesDo{ | key, value |
+            postf("%: %\n", key, value);
+        };
+
+        emitter = SpatialArray(attributes[attrNames.type],
+                               attributes[attrNames.units],
+                               attributes[attrNames.position]);
     }
 }
