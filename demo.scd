@@ -21,56 +21,57 @@
 //     "%s: %s".format(header, val).postln;
 // };
 
-~sofaObj = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
+~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 
 "== Global Metadata ==".postln;
-postf("... metadata.conventions: %\n", ~sofaObj.metadata.conventions);
-postf("... metadata.sofaConventions: %\n", ~sofaObj.metadata.sofaConventions);
-postf("... metadata.sofaConventionsVersion: %\n",
-      ~sofaObj.metadata.sofaConventionsVersion);
-postf("... metadata.apiName: %\n", ~sofaObj.metadata.apiName);
-postf("... metadata.apiVersion: %\n", ~sofaObj.metadata.apiVersion);
-postf("... metadata.dataType: %\n", ~sofaObj.metadata.dataType);
-postf("... metadata.roomType: %\n", ~sofaObj.metadata.roomType);
-postf("... metadata.dateCreated: %\n", ~sofaObj.metadata.dateCreated);
-postf("... metadata.dateModified: %\n", ~sofaObj.metadata.dateModified);
-postf("... metadata.authorContact: %\n", ~sofaObj.metadata.authorContact);
-postf("... metadata.organization: %\n", ~sofaObj.metadata.organization);
-postf("... metadata.license: %\n", ~sofaObj.metadata.license);
-postf("... metadata.title: %\n", ~sofaObj.metadata.title);
-postf("... metadata.databaseName: %\n", ~sofaObj.metadata.databaseName);
-postf("... metadata.listenerShortName: %\n",
-      ~sofaObj.metadata.listenerShortName);
+postf("... hrtf.convention: %\n", ~hrtf.convention);
+postf("... hrtf.version: %\n", ~hrtf.version);
+postf("... hrtf.sofaConvention: %\n", ~hrtf.sofaConvention);
+postf("... hrtf.sofaConventionVersion: %\n",
+      ~hrtf.sofaConventionVersion);
+postf("... hrtf.apiName: %\n", ~hrtf.apiName);
+postf("... hrtf.apiVersion: %\n", ~hrtf.apiVersion);
+postf("... hrtf.dataType: %\n", ~hrtf.dataType);
+postf("... hrtf.roomType: %\n", ~hrtf.roomType);
+postf("... hrtf.dateCreated: %\n", ~hrtf.dateCreated);
+postf("... hrtf.dateModified: %\n", ~hrtf.dateModified);
+postf("... hrtf.authorContact: %\n", ~hrtf.authorContact);
+postf("... hrtf.organization: %\n", ~hrtf.organization);
+postf("... hrtf.license: %\n", ~hrtf.license);
+postf("... hrtf.title: %\n", ~hrtf.title);
+postf("... hrtf.databaseName: %\n", ~hrtf.databaseName);
+postf("... hrtf.listenerShortName: %\n",
+      ~hrtf.listenerShortName);
 
 "== Listener ==".postln;
-postf("... listener.isCartesian: %\n", ~sofaObj.listener.isCartesian);
-postf("... listener.isSpherical: %\n", ~sofaObj.listener.isSpherical);
-postf("... listener.units: %\n", ~sofaObj.listener.units);
-postf("... listener.position: %\n", ~sofaObj.listener.position);
-postf("... listener.view: %\n", ~sofaObj.listener.view);
+postf("... hrtf.listener.isCartesian: %\n", ~hrtf.listener.isCartesian);
+postf("... hrtf.listener.isSpherical: %\n", ~hrtf.listener.isSpherical);
+postf("... hrtf.listener.units: %\n", ~hrtf.listener.units);
+postf("... hrtf.listener.position: %\n", ~hrtf.listener.position);
+postf("... hrtf.listener.view: %\n", ~hrtf.listener.view);
 
 "== Receiver ==".postln;
-postf("... receiver.isCartesian: %\n", ~sofaObj.receiver.isCartesian);
-postf("... receiver.isSpherical: %\n", ~sofaObj.receiver.isSpherical);
-postf("... receiver.units: %\n", ~sofaObj.receiver.units);
-postf("... receiver.left: %\n", ~sofaObj.receiver.left);
-postf("... receiver.right: %\n", ~sofaObj.receiver.right);
+postf("... hrtf.receiver.isCartesian: %\n", ~hrtf.receiver.isCartesian);
+postf("... hrtf.receiver.isSpherical: %\n", ~hrtf.receiver.isSpherical);
+postf("... hrtf.receiver.units: %\n", ~hrtf.receiver.units);
+postf("... hrtf.receiver.left: %\n", ~hrtf.receiver.left);
+postf("... hrtf.receiver.right: %\n", ~hrtf.receiver.right);
 
 "== Source ==".postln;
-postf("... source.isCartesian: %\n", ~sofaObj.source.isCartesian);
-postf("... source.isSpherical: %\n", ~sofaObj.source.isSpherical);
-postf("... source.units: %\n", ~sofaObj.source.units);
-postf("... source.positions.size: %\n", ~sofaObj.source.positions.size);
-postf("... source.positions[0]: %\n", ~sofaObj.source.positions[0]);
-postf("... source.positions[%]: %\n",
-      ~sofaObj.source.positions.size-1,
-      ~sofaObj.source.positions[~sofaObj.source.positions.size-1]);
+postf("... hrtf.source.isCartesian: %\n", ~hrtf.source.isCartesian);
+postf("... hrtf.source.isSpherical: %\n", ~hrtf.source.isSpherical);
+postf("... hrtf.source.units: %\n", ~hrtf.source.units);
+postf("... hrtf.source.positions.size: %\n", ~hrtf.source.positions.size);
+postf("... hrtf.source.positions[0]: %\n", ~hrtf.source.positions[0]);
+postf("... hrtf.source.positions[%]: %\n",
+      ~hrtf.source.positions.size-1,
+      ~hrtf.source.positions[~hrtf.source.positions.size-1]);
 
 "== Emitter ==".postln;
-postf("... emitter.isCartesian: %\n", ~sofaObj.emitter.isCartesian);
-postf("... emitter.isSpherical: %\n", ~sofaObj.emitter.isSpherical);
-postf("... emitter.units: %\n", ~sofaObj.emitter.units);
-postf("... emitter.position: %\n", ~sofaObj.emitter.position);
+postf("... hrtf.emitter.isCartesian: %\n", ~hrtf.emitter.isCartesian);
+postf("... hrtf.emitter.isSpherical: %\n", ~hrtf.emitter.isSpherical);
+postf("... hrtf.emitter.units: %\n", ~hrtf.emitter.units);
+postf("... hrtf.emitter.position: %\n", ~hrtf.emitter.position);
 
 0.exit;
 )

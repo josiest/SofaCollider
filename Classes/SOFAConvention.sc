@@ -1,7 +1,7 @@
 // A super class for initializing common data in all sofa conventions
 SofaConvention {
     var <dataFile;  // where the sofa is object saved on disk
-    var <metadata;  // the common and specific global meta data
+    var <prGlobalMetadata;  // the common and specific global meta data
 
     // call by subclass, only
     // initialize a convention type from loaded attributes and 
@@ -9,7 +9,7 @@ SofaConvention {
         ^super.newCopyArgs(filePath);
     }
 
-    initMetadataFromAttributes{ | attributes |
+    initGlobalMetadata{ | attributes |
         var conventionAttributeName;
 
         // get the key to acces the specific convention name from attributes
@@ -18,7 +18,7 @@ SofaConvention {
 
         // transform each meta data attribute name
         // into a mapping of field-name to attribute value
-        metadata = SofaInterface
+        prGlobalMetadata = SofaInterface
             .metadataNames(attributes[conventionAttributeName])
             .collect{ | attr |
 
@@ -31,4 +31,24 @@ SofaConvention {
             }
             .asDict.know_(true); // indexing can be done through messaging
     }
+
+    convention{ ^prGlobalMetadata.conventions; }
+    version{ ^prGlobalMetadata.version; }
+
+    sofaConvention{ ^prGlobalMetadata.sofaConventions; }
+    sofaConventionVersion{ ^prGlobalMetadata.sofaConventionsVersion; }
+
+    apiName{ ^prGlobalMetadata.apiName; }
+    apiVersion{ ^prGlobalMetadata.apiVersion; }
+
+    dataType{ ^prGlobalMetadata.dataType; }
+    roomType{ ^prGlobalMetadata.roomType; }
+
+    dateCreated{ ^prGlobalMetadata.dateCreated; }
+    dateModified{ ^prGlobalMetadata.dateModified; }
+
+    authorContact{ ^prGlobalMetadata.authorContact; }
+    organization{ ^prGlobalMetadata.organization; }
+    license{ ^prGlobalMetadata.license; }
+    title{ ^prGlobalMetadata.title; }
 }

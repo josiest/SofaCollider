@@ -13,7 +13,7 @@ SimpleFreeFieldHRIR : SofaConvention {
         attributes = SofaInterface.loadMetadata(filePath, convention);
 
         ^super.new(filePath)
-              .initMetadataFromAttributes(attributes)
+              .initGlobalMetadata(attributes)
               .initListenerFromAttributes(attributes)
               .initReceiverFromAttributes(attributes)
               .initSourceFromAttributes(attributes)
@@ -53,4 +53,7 @@ SimpleFreeFieldHRIR : SofaConvention {
                           attributes[attrNames.units],
                           attributes[attrNames.position]);
     }
+
+    databaseName{ ^prGlobalMetadata.databaseName; }
+    listenerShortName{ ^prGlobalMetadata.listenerShortName; }
 }
