@@ -35,6 +35,9 @@ SimpleFreeFieldHRIR : SofaConvention {
             attributes[key].postln;
         };
 
+        "== attributes ==".postln;
+        attributes.keysDo{ | key |  ("... " ++ key).postln; };
+
         ^super.new(filePath)
               .initMetadataFromAttributes(attributes)
               .initSimpleFreeFieldHRIRFromAttributes(attributes);

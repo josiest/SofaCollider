@@ -52,7 +52,7 @@ SofaInterface {
             // create octave source code strings that print all metadata attributes,
             // both common and specific to the subclass
             SofaInterface.metadataNames(convention)
-                .collect{ | attr | SofaInterface.prPrintMetadata(attr) }// ++
+                .collect{ | attr | SofaInterface.prPrintMetadata(attr) } ++
 
             SofaInterface.spatialArrayNames(convention)
                 .collect{ | attr | SofaInterface.prPrintSpatialArray(attr) }
@@ -252,12 +252,13 @@ SofaInterface {
     // create an octave source code line for printing a spatial array
     *prPrintSpatialArray{ | name |
         var attr, delim, octaveAttr;
+
         delim = SofaInterface.prPrintingDelimeter;
         attr = SofaInterface.prConventionalSpatialAttributes(name);
         octaveAttr = SofaInterface.prSpatialArrayOctaveAttributes(name);
 
-        ^("printf(%%%\\n);".format(attr.type, delim, octaveAttr.type) ++
-          "printf(%%%\\n);".format(attr.units, delim, octaveAttr.units) ++
+        ^("printf('%%%\\n');\n".format(attr.type, delim, octaveAttr.type) ++
+          "printf('%%%\\n');\n".format(attr.units, delim, octaveAttr.units) ++
 
           // write the position array to file
           "csvwrite('%.csv', hrtf.%);\n".format(name, octaveAttr.position) ++
@@ -280,15 +281,15 @@ SofaInterface {
         // we can see that secondary attributes are accessed by underscores
         // for example: Obj.ListenerPosition_Units
 
-        ^[\type -> name++"_Type",
-          \units -> name++"_Units",
+        ^[\type -> (name++"_Type"),
+          \units -> (name++"_Units"),
           \position -> name]
         .asDict.know_(true);
     }
     // get the conventional attributes associated with a spatial array
     *prConventionalSpatialAttributes{ | name |
-        ^[\type -> name++":Type",
-          \units -> name++":Units",
+        ^[\type -> (name++":Type"),
+          \units -> (name++":Units"),
           \position -> name]
         .asDict.know_(true);
     }
