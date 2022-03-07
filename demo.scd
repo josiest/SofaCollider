@@ -50,7 +50,8 @@ postf("... metadata.listenerShortName: %\n",
 postf("... receiver.isCartesian: %\n", ~sofaObj.receiver.isCartesian);
 postf("... receiver.isSpherical: %\n", ~sofaObj.receiver.isSpherical);
 postf("... receiver.units: %\n", ~sofaObj.receiver.units);
-postf("... receiver.position: %\n", ~sofaObj.receiver.position);
+postf("... receiver.left: %\n", ~sofaObj.receiver.left);
+postf("... receiver.right: %\n", ~sofaObj.receiver.right);
 // "... sourcePositionType: ".post;
 // ~sofaObj.sourcePositionType.postln;
 // "... sourcePositionUnits: ".post;

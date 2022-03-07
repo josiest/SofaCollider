@@ -33,9 +33,9 @@ SimpleFreeFieldHRIR : SofaConvention {
         var attrNames;
 
         attrNames = SofaInterface.spatialAttributeNames(\ReceiverPosition);
-        receiver = SpatialArray(attributes[attrNames.type],
-                                attributes[attrNames.units],
-                                attributes[attrNames.position]);
+        receiver = Receiver(attributes[attrNames.type],
+                            attributes[attrNames.units],
+                            attributes[attrNames.position]);
     }
 
     initSourceFromAttributes{ | attributes |
@@ -45,8 +45,8 @@ SimpleFreeFieldHRIR : SofaConvention {
         var attrNames;
 
         attrNames = SofaInterface.spatialAttributeNames(\EmitterPosition);
-        emitter = SpatialArray(attributes[attrNames.type],
-                               attributes[attrNames.units],
-                               attributes[attrNames.position]);
+        emitter = Emitter(attributes[attrNames.type],
+                          attributes[attrNames.units],
+                          attributes[attrNames.position]);
     }
 }
