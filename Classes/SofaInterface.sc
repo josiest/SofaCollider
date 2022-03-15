@@ -38,28 +38,6 @@ SofaInterface {
         ].asDict;
     }
 
-    // *installCIPICDatabase{ | zipfilePath |
-    //     var dbCIPIC, unzipCmd;
-    //     var from, to;
-    //     var unzipIntoDB;
-
-    //     dbCIPIC = SofaInterface.hrtfRoot ++ "CIPIC/";
-    //     from = zipfilePath;
-
-    //     // this will work for both mac and linux
-    //     unzipCmd = "unzip";
-    //     to = "-d " ++ dbCIPIC;
-
-    //     // but on windows we'll need to use a powershell cmd
-    //     Platform.case(\windows, {
-    //         unzipCmd = "Expand-Archive";
-    //         to = dbCIPIC;
-    //     });
-
-    //     unzipIntoDB = [unzipCmd, from, to].join($ );
-    //     unzipIntoDB.unixCmd;
-    // }
-
     // get all the attribute names of the global metadata
     *metadataNames{ | convention |
         ^(SofaInterface.attributeNames[\Common_Metadata] ++
