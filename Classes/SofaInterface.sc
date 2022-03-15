@@ -3,12 +3,22 @@ SofaInterface {
     classvar <rootDir;
     classvar <srcDir;
     classvar <conventionsDir;
+
+    // define where to find the hrtf databases
+    classvar <hrtfRoot;
+    classvar <dbSOFA;
+
+    // conventional attribute names
     classvar <attributeNames;
 
     *initClass{
-        rootDir = "/home/josiest/sofa/API_MO/";
+        rootDir = "/home/josiest/sofa/";
         srcDir = rootDir ++ "API_MO/";
         conventionsDir = srcDir ++ "conventions/";
+
+        hrtfRoot = rootDir ++ "HRTFs/";
+        dbSOFA = hrtfRoot ++ "SOFA/";
+
         attributeNames = [
             \Common_Metadata ->
                 ["GLOBAL:Conventions", "GLOBAL:Version",
@@ -28,6 +38,28 @@ SofaInterface {
         ].asDict;
     }
 
+    // *installCIPICDatabase{ | zipfilePath |
+    //     var dbCIPIC, unzipCmd;
+    //     var from, to;
+    //     var unzipIntoDB;
+
+    //     dbCIPIC = SofaInterface.hrtfRoot ++ "CIPIC/";
+    //     from = zipfilePath;
+
+    //     // this will work for both mac and linux
+    //     unzipCmd = "unzip";
+    //     to = "-d " ++ dbCIPIC;
+
+    //     // but on windows we'll need to use a powershell cmd
+    //     Platform.case(\windows, {
+    //         unzipCmd = "Expand-Archive";
+    //         to = dbCIPIC;
+    //     });
+
+    //     unzipIntoDB = [unzipCmd, from, to].join($ );
+    //     unzipIntoDB.unixCmd;
+    // }
+
     // get all the attribute names of the global metadata
     *metadataNames{ | convention |
         ^(SofaInterface.attributeNames[\Common_Metadata] ++
@@ -42,13 +74,6 @@ SofaInterface {
         ^[\type -> (name++\_Type).asSymbol,
           \units -> (name++\_Units).asSymbol,
           \position -> name.asSymbol]
-        .asDict.know_(true);
-    }
-    *listenerAttributeNames{
-        ^[\type -> \ListenerPosition_Type,
-          \units -> \ListenerPosition_Units,
-          \position -> \ListenerPosition,
-          \view -> \ListenerView]
         .asDict.know_(true);
     }
 

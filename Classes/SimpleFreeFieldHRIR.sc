@@ -1,8 +1,10 @@
 SimpleFreeFieldHRIR : SofaConvention {
-    var <listener;
-    var <receiver;
-    var <source;
-    var <emitter;
+    var <listenerPosition;
+    var <receiverPosition;
+    var <sourcePosition;
+    var <emitterPosition;
+    var <listenerView;
+    var <listenerUp;
 
     *newFromFile{ | filePath |
         var attributes, convention;
@@ -14,44 +16,59 @@ SimpleFreeFieldHRIR : SofaConvention {
 
         ^super.new(filePath)
               .initGlobalMetadata(attributes)
-              .initListenerFromAttributes(attributes)
-              .initReceiverFromAttributes(attributes)
-              .initSourceFromAttributes(attributes)
-              .initEmitterFromAttributes(attributes);
+              .initListenerPositionFromAttributes(attributes)
+              .initReceiverPositionFromAttributes(attributes)
+              .initSourcePositionFromAttributes(attributes)
+              .initEmitterPositionFromAttributes(attributes)
+              .initListenerViewFromAttributes(attributes);
     }
 
-    initListenerFromAttributes{ | attributes |
-        var attrNames = SofaInterface.listenerAttributeNames;
-        listener = Listener(attributes[attrNames.type],
-                            attributes[attrNames.units],
-                            attributes[attrNames.position],
-                            attributes[attrNames.view]);
-    }
-
-    initReceiverFromAttributes{ | attributes |
+    initListenerPositionFromAttributes{ | attributes |
         var attrNames;
-
-        attrNames = SofaInterface.spatialAttributeNames(\ReceiverPosition);
-        receiver = Receiver(attributes[attrNames.type],
-                            attributes[attrNames.units],
-                            attributes[attrNames.position]);
+        attrNames = SofaInterface.spatialAttributeNames(\ListenerPosition);
+        listenerPosition = SpatialArray(attributes[attrNames.type],
+                                        attributes[attrNames.units],
+                                        attributes[attrNames.position]);
     }
 
-    initSourceFromAttributes{ | attributes |
+    initReceiverPositionFromAttributes{ | attributes |
+        var attrNames;
+        attrNames = SofaInterface.spatialAttributeNames(\ReceiverPosition);
+        receiverPosition = SpatialArray(attributes[attrNames.type],
+                                        attributes[attrNames.units],
+                                        attributes[attrNames.position]);
+    }
+
+    initSourcePositionFromAttributes{ | attributes |
         var attrNames;
         attrNames = SofaInterface.spatialAttributeNames(\SourcePosition);
-        source = Source(attributes[attrNames.type],
-                        attributes[attrNames.units],
-                        attributes[attrNames.position]);
+        sourcePosition = SpatialArray(attributes[attrNames.type],
+                                      attributes[attrNames.units],
+                                      attributes[attrNames.position]);
     }
 
-    initEmitterFromAttributes{ | attributes |
+    initEmitterPositionFromAttributes{ | attributes |
         var attrNames;
-
         attrNames = SofaInterface.spatialAttributeNames(\EmitterPosition);
-        emitter = Emitter(attributes[attrNames.type],
-                          attributes[attrNames.units],
-                          attributes[attrNames.position]);
+        emitterPosition = SpatialArray(attributes[attrNames.type],
+                                       attributes[attrNames.units],
+                                       attributes[attrNames.position]);
+    }
+
+    initListenerViewFromAttributes { | attributes |
+        var attrNames;
+        attrNames = SofaInterface.spatialAttributeNames(\ListenerView);
+        listenerView = SpatialArray(attributes[attrNames.type],
+                                    attributes[attrNames.units],
+                                    attributes[attrNames.position]);
+    }
+
+    initListenerUpFromAttributes { | attributes |
+        var attrNames;
+        attrNames = SofaInterface.spatialAttributeNames(\ListenerUp);
+        listenerUp = SpatialArray(attributes[attrNames.type],
+                                  attributes[attrNames.units],
+                                  attributes[attrNames.position]);
     }
 
     databaseName{ ^prGlobalMetadata.databaseName; }
