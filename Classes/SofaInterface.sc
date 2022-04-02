@@ -2,6 +2,7 @@ SofaInterface {
     // define where to find the sofa source repository
     classvar <rootDir;
     classvar <srcDir;
+    classvar <databaseDir;
     classvar <conventionsDir;
 
     // define where to find the hrtf databases
@@ -12,9 +13,10 @@ SofaInterface {
     classvar <attributeNames;
 
     *initClass{
-        rootDir = "/home/josiest/sofa/";
-        srcDir = rootDir ++ "API_MO/";
-        conventionsDir = srcDir ++ "conventions/";
+        rootDir = Platform.userHomeDir +/+ "sofa";
+        srcDir = rootDir +/+ "API_MO";
+        databaseDir = rootDir +/+ "HRTFs";
+        conventionsDir = srcDir +/+ "conventions";
 
         hrtfRoot = rootDir ++ "HRTFs/";
         dbSOFA = hrtfRoot ++ "SOFA/";
