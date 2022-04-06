@@ -15,7 +15,7 @@ topic
 ### Requirements
 
 In order to install and use the SofaCollider Quark, you of course need to have
-the SuperCollider installed, but you'll also need matlab or octave installed,
+SuperCollider installed, but you'll also need matlab or octave installed,
 as well as the SOFA matlab/octave package, and any dependencies it may need.
 A full list of dependencies below
 
@@ -50,3 +50,15 @@ project to the list of included directories, then save and recompile the class
 library.
 
 ## Usage
+
+In order to use the SOFA interface, you'll first needs some HRTFs. The
+SofaCollider Quark aims to make this very easy by providing a simple interface
+to pre-existing databases of HRTFs.
+
+```
+CIPIC.downloadSubject(3); // Download the CIPIC subject_003 hrtf data
+
+// create a new Simple Free-Field HRIR object from the downloaded data
+~hrtfPath = CIPIC.subjectLocalPath(3);
+~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
+```
