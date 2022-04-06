@@ -36,14 +36,13 @@ CIPIC {
     // Download a subject file
     // defaults path to root database directory
     *downloadSubject{ | id, path=nil |
-        var url;
+        var cmd, url;
 
         url = CIPIC.subjectUrl(id);
         if (path.isNil, {
             path = CIPIC.localRoot;
         });
-        postf("... downloading file %\n", url);
-        postf("... downloading into %\n", path);
-        "wget % --directory-prefix %".format(url, path).unixCmd;
+        cmd = "wget % --directory-prefix % --quiet".format(url, path);
+        cmd.unixCmd;
     }
 }
