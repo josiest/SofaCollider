@@ -19,13 +19,6 @@ the SuperCollider installed, but you'll also need matlab or octave installed,
 as well as the SOFA matlab/octave package, and any dependencies it may need.
 A full list of dependencies below
 
-- SuperCollider language
-- Octave
-- Octave NetCDF package (needed for SOFA API)
-- SOFA matlab/octave API
-
-### Installation Instructions
-
 - **SuperCollider:** Please refer to the
   [SuperCollider website](https://supercollider.github.io/downloads) for
   installation instructions.
@@ -46,5 +39,14 @@ A full list of dependencies below
   Navigate to your home directory and run the following command on the console
 
   `git clone https://github.com/sofacoustics/API_MO.git sofa`
+
+### Installation Instructions
+
+Once you have all the pre-requisites installed, you'll need to add the
+SofaCollider project to the class library. You can do this by opening up the
+preferences window from the edit menu of the SuperCollider IDE, and navigating
+to the Interpreter section. You should then add the path to the SofaCollider
+project to the list of included directories, then save and recompile the class
+library.
 
 ## Usage
