@@ -26,17 +26,25 @@ A full list of dependencies below
 
 ### Installation Instructions
 
+- **SuperCollider:** Please refer to the
+  [SuperCollider website](https://supercollider.github.io/downloads) for
+  installation instructions.
+
 - **Octave**: Please refer to the
   [octave website](https://www.gnu.org/software/octave/download) for
-  installation instructions
+  installation instructions.
 
 - **Octave NetCDF package**: Once you have octave installed, you can use
   octave's package manager to install the
-  [NetCDF package](https://octave.sourceforge.io/netcdf/index.html)
+  [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).
 
 - **SOFA Matlab/Octave API**: This package is not officially registered with
   Octave's package manager so you'll need to manually download the package
   source code into a specific place so that the SofaCollider Quark can see
-  where it is (More info on that to come)
+  where it is.
+
+  Navigate to your home directory and run the following command on the console
+
+  `git clone https://github.com/sofacoustics/API_MO.git sofa`
 
 ## Usage
