@@ -21,7 +21,22 @@ A full list of dependencies below
 
 - SuperCollider language
 - Octave
-- SOFA matlab/octave API
 - Octave NetCDF package (needed for SOFA API)
+- SOFA matlab/octave API
+
+### Installation Instructions
+
+- **Octave**: Please refer to the
+  [octave website](https://www.gnu.org/software/octave/download) for
+  installation instructions
+
+- **Octave NetCDF package**: Once you have octave installed, you can use
+  octave's package manager to install the
+  [NetCDF package](https://octave.sourceforge.io/netcdf/index.html)
+
+- **SOFA Matlab/Octave API**: This package is not officially registered with
+  Octave's package manager so you'll need to manually download the package
+  source code into a specific place so that the SofaCollider Quark can see
+  where it is (More info on that to come)
 
 ## Usage
