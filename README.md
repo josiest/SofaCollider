@@ -56,9 +56,10 @@ SofaCollider Quark aims to make this very easy by providing a simple interface
 to pre-existing databases of HRTFs.
 
 ```
-CIPIC.downloadSubject(3); // Download the CIPIC subject_003 hrtf data
+~subjectID = 3;
+CIPIC.downloadSubject(~subjectID); // Download the CIPIC subject_003 hrtf data
 
 // create a new Simple Free-Field HRIR object from the downloaded data
-~hrtfPath = CIPIC.subjectLocalPath(3);
+~hrtfPath = CIPIC.subjectLocalPath(~subjectID);
 ~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 ```
