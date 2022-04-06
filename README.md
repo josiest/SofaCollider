@@ -14,4 +14,14 @@ topic
 
 ### Requirements
 
+In order to install and use the SofaCollider Quark, you of course need to have
+the SuperCollider installed, but you'll also need matlab or octave installed,
+as well as the SOFA matlab/octave package, and any dependencies it may need.
+A full list of dependencies below
+
+- SuperCollider language
+- Octave
+- SOFA matlab/octave API
+- Octave NetCDF package (needed for SOFA API)
+
 ## Usage
