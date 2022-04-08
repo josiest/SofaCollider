@@ -2,12 +2,20 @@
 "=== CIPIC Database ===".postln;
 postf("... CIPIC.subjectUrl(3): %\n", CIPIC.subjectUrl(3));
 postf("... CIPIC.subjectLocalPath(3): %\n", CIPIC.subjectLocalPath(3));
-CIPIC.downloadSubject(3);
+// CIPIC.downloadSubject(3);
+
+~cipicHrtfPath = CIPIC.subjectLocalPath(3);
+~cipicHrtf = SimpleFreeFieldHRIR.newFromFile(~cipicHrtfPath);
+postf("... cipicHrtf.sofaConvention: %\n", ~cipicHrtf.sofaConvention);
 
 "=== Listen Database ===".postln;
 postf("... Listen.subjectUrl(1002): %\n", Listen.subjectUrl(1002));
 postf("... Listen.subjectLocalPath(1002): %\n", Listen.subjectLocalPath(1002));
-Listen.downloadSubject(1002);
+// Listen.downloadSubject(1002);
+
+~listenHrtfPath = Listen.subjectLocalPath(1002);
+~listenHrtf = SimpleFreeFieldHRIR.newFromFile(~listenHrtfPath);
+postf("... listenHrtf.sofaConvention: %\n", ~listenHrtf.sofaConvention);
 
 // ~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 // 
