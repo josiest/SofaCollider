@@ -1,26 +1,8 @@
 SofaInterface {
-    // define where to find the sofa source repository
-    classvar <rootDir;
-    classvar <srcDir;
-    classvar <databaseDir;
-    classvar <conventionsDir;
-
-    // define where to find the hrtf databases
-    classvar <hrtfRoot;
-    classvar <dbSOFA;
-
     // conventional attribute names
     classvar <attributeNames;
 
     *initClass{
-        rootDir = Platform.userHomeDir +/+ "sofa";
-        srcDir = rootDir +/+ "API_MO";
-        databaseDir = rootDir +/+ "HRTFs";
-        conventionsDir = srcDir +/+ "conventions";
-
-        hrtfRoot = rootDir ++ "HRTFs/";
-        dbSOFA = hrtfRoot ++ "SOFA/";
-
         attributeNames = [
             \Common_Metadata ->
                 ["GLOBAL:Conventions", "GLOBAL:Version",
@@ -39,6 +21,18 @@ SofaInterface {
                  "EmitterPosition", "ListenerView"]
         ].asDict;
     }
+
+    // the directory of the sofa octave repo
+    *sofaOctaveRepo{ SofaColliderConfig.sofaOctaveRepo }
+
+    // the root directory of hrtf databases
+    *hrtfDataDir{ SofaColliderConfig.hrtfDataDir }
+
+    // the source code directory of the sofa octave repo
+    *sofaOctaveSrcDir{ SofaInterface.sofaOctaveRepo +/+ "API_MO" }
+
+    // the directory that has convention description csv files
+    *conventionsDir{ SofaInterface.sofaOctaveSrcDir +/+ "conventions" }
 
     // get all the attribute names of the global metadata
     *metadataNames{ | convention |
@@ -332,7 +326,7 @@ SofaInterface {
         allSourceCode = [
             "warning('off', 'all');",
             // add the path to the sofa M/O repo and initialize
-            "addpath('%');".format(SofaInterface.srcDir),
+            "addpath('%');".format(SofaInterface.sofaOctaveSrcDir),
             "SOFAstart('silent');",
 
             // load the specified sofa file and mark the beginning of output
