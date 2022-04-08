@@ -1,35 +1,13 @@
 (
-// define the hrtfPath
-~hrtfDir = SofaInterface.rootDir ++ "HRTFs/SOFA/sofa_api_mo_test";
-~hrtfFilename = "CIPIC_subject_003_hrir_final.sofa";
-~hrtfPath = ~hrtfDir +/+ ~hrtfFilename;
-
-// "closest source".postln;
-// "path in demo: ".post;
-// ~hrtfPath.postln;
-// SofaInterface.closestSourceFromVector(~hrtfPath, [89, 13, 2])
-//     .do({ | val | val.postln; });
-//
-// "source at".postln;
-// ~sourceVectorFromIndex.(~hrtfPath, 91)
-//     .do({ | val | val.postln; });
-//
-// "IR from index 91".postln;
-// ~irFromIndex.(~hrtfPath, 91).postln;
-
-// ~conventionsFromFile.(~hrtfPath).do{ | header, val |
-//     "%s: %s".format(header, val).postln;
-// };
-
-// ~downloadDir = "/home/josiest/Downloads";
-// ~cipicZipfile = "CIPIC_hrtf_database.zip";
-// SofaInterface.installCIPICdatabase(~downloadDir+/+cipicZipfile);
-// SofaInterface.compileCIPICListener(3);
-
 "=== CIPIC Database ===".postln;
 postf("... CIPIC.subjectUrl(3): %\n", CIPIC.subjectUrl(3));
 postf("... CIPIC.subjectLocalPath(3): %\n", CIPIC.subjectLocalPath(3));
 CIPIC.downloadSubject(3);
+
+"=== Listen Database ===".postln;
+postf("... Listen.subjectUrl(1002): %\n", Listen.subjectUrl(1002));
+postf("... Listen.subjectLocalPath(1002): %\n", Listen.subjectLocalPath(1002));
+Listen.downloadSubject(1002);
 
 // ~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 // 

@@ -1,13 +1,13 @@
-CIPIC : Database {
+Listen : Database {
 
     classvar <prRootUrl;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/cipic";
-        prSubjectFmt = "subject_%.sofa";
-        prLocalRoot = SofaInterface.databaseDir +/+ "CIPIC";
+        prRootUrl = "https://sofacoustics.org/data/database/listen (hrtf)";
+        prSubjectFmt = "IRC_%_R_44100.sofa";
+        prLocalRoot = SofaInterface.databaseDir +/+ "LISTEN";
     }
 
     // The url of the database online
@@ -18,27 +18,25 @@ CIPIC : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        var padded;
-        padded = id.asStringToBase(10, 3);
-        ^CIPIC.prSubjectFmt.format(padded)
+        ^Listen.prSubjectFmt.format(id)
     }
 
     // Get the url of a subject
     *subjectUrl{ | id |
-        ^(CIPIC.rootUrl +/+ CIPIC.subjectFilename(id));
+        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id |
-        ^(CIPIC.localRoot +/+ CIPIC.subjectFilename(id));
+        ^(Listen.localRoot +/+ Listen.subjectFilename(id));
     }
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = CIPIC.subjectUrl(id);
+        url = Listen.subjectUrl(id);
 
         if (path.isNil, {
-            path = CIPIC.localRoot;
+            path = Listen.localRoot;
         });
         ^Database.downloadSubject(url, path);
     }
