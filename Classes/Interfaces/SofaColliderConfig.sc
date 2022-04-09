@@ -11,8 +11,13 @@ SofaColliderConfig {
     *sofaOctaveRepo {
         var key, default;
         key = "sofaOctaveRepo";
+
+        // get the parent directory of the supercollider app suppport dir
         default = Platform.userAppSupportDir.standardizePath
                           .split($/).drop(-1).join($/);
+
+        // the sofa package should be installed in octave/packages
+        // relative to the ".local/share" directory
         default = default +/+ "octave/packages/sofa";
         ^SofaColliderConfig.prParsePath(key, default);
     }
