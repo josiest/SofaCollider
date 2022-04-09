@@ -32,8 +32,8 @@ A full list of dependencies below
   [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).
 
   You will likely also need to install netcdf for your system in order for this
-  package to work properly. On linux systems you can acheive this with the
-  command `sudo apt install libnetcdf-dev`.
+  package to work properly. On debian-based linux systems you can acheive this
+  with the command `sudo apt install libnetcdf-dev`.
 
 - **SOFA Matlab/Octave API**: This package is not officially registered with
   Octave's package manager so you'll need to manually download the package
