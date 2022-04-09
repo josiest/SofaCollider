@@ -23,16 +23,16 @@ SofaInterface {
     }
 
     // the directory of the sofa octave repo
-    *sofaOctaveRepo{ SofaColliderConfig.sofaOctaveRepo }
+    *sofaOctaveRepo{ ^SofaColliderConfig.sofaOctaveRepo }
 
     // the root directory of hrtf databases
-    *hrtfDataDir{ SofaColliderConfig.hrtfDataDir }
+    *hrtfDataDir{ ^SofaColliderConfig.hrtfDataDir }
 
     // the source code directory of the sofa octave repo
-    *sofaOctaveSrcDir{ SofaInterface.sofaOctaveRepo +/+ "API_MO" }
+    *sofaOctaveSrcDir{ ^SofaInterface.sofaOctaveRepo +/+ "API_MO" }
 
     // the directory that has convention description csv files
-    *conventionsDir{ SofaInterface.sofaOctaveSrcDir +/+ "conventions" }
+    *conventionsDir{ ^SofaInterface.sofaOctaveSrcDir +/+ "conventions" }
 
     // get all the attribute names of the global metadata
     *metadataNames{ | convention |
