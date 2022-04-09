@@ -95,3 +95,11 @@ CIPIC.downloadSubject(~subjectID); // Download the CIPIC subject_003 hrtf data
 ~hrtfPath = CIPIC.subjectLocalPath(~subjectID);
 ~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
 ```
+
+Once you've created an `hrtf` object, you can query various metadata about the
+object. For example:
+
+```
+postf("hrtf.sofaConvention: %\n", ~hrtf.sofaConvention);
+postf("hrtf.listenerPosition.at(0): %\n", ~hrtf.listenerPosition.at(0));
+```
