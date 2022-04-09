@@ -1,3 +1,4 @@
+// A set of functions for interfacing with the SofaCollider Quark configuration
 SofaColliderConfig {
     classvar <configPath;
 
@@ -6,23 +7,25 @@ SofaColliderConfig {
                  +/+ "SofaCollider/sofa_interface.yml";
     }
 
+    // The directory of the SOFA Matlab/Octave API
     *sofaOctaveRepo {
         var key, default;
         key = "sofaOctaveRepo";
         default = Platform.userAppSupportDir.standardizePath
                           .split($/).drop(-1).join($/);
         default = default +/+ "octave/packages/sofa";
-        ^SofaColliderConfig.parsePath(key, default);
+        ^SofaColliderConfig.prParsePath(key, default);
     }
 
+    // The root directory for various HRTF databases
     *hrtfDataDir {
         var key, default;
         key = "hrtfDataDir";
         default = SofaColliderConfig.sofaOctaveRepo +/+ "HRTFs";
-        ^SofaColliderConfig.parsePath(key, default);
+        ^SofaColliderConfig.prParsePath(key, default);
     }
 
-    *parsePath { | key, default |
+    *prParsePath { | key, default |
         var path, settings, parseSuccess;
 
         // use a default path in case parsing fails
