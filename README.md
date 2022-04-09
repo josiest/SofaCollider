@@ -45,7 +45,6 @@ A full list of dependencies below
 
   This will give the SuperCollider support directory, so you'll want to navigate
   to the parent directory. On unix systems it might look something like
-
   `~/.local/share`
 
   If it doesn't already exist, make the directory system `octave/packages` and
