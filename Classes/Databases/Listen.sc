@@ -7,7 +7,7 @@ Listen : Database {
     *initClass {
         prRootUrl = "https://sofacoustics.org/data/database/listen (hrtf)";
         prSubjectFmt = "IRC_%_R_44100.sofa";
-        prLocalRoot = SofaInterface.databaseDir +/+ "LISTEN";
+        prLocalRoot = SofaInterface.hrtfDataDir +/+ "LISTEN";
     }
 
     // The url of the database online
