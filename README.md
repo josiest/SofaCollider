@@ -36,9 +36,26 @@ A full list of dependencies below
   source code into a specific place so that the SofaCollider Quark can see
   where it is.
 
-  Navigate to your home directory and run the following command on the console
+  **Option 1: Install Sofa Matlab/Octave API to default directory**
+
+  Navigate to your user application support directory - you can find this
+  from SuperCollider from the output of
+
+  `Platform.userAppSupportDir`
+
+  This will give the SuperCollider support directory, so you'll want to navigate
+  to the parent directory. On unix systems it might look something like
+
+  `~/.local/share`
+
+  If it doesn't already exist, make the directory system `octave/packages` and
+  navigate inside it and run the following command
 
   `git clone https://github.com/sofacoustics/API_MO.git sofa`
+
+  **Option 2: Tell SofaCollider where to find the API**
+
+  This will likely be the easier option, but it's currently in development ...
 
 ### Installation Instructions
 
