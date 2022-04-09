@@ -21,6 +21,9 @@ SofaColliderConfig {
         default = default +/+ "octave/packages/sofa";
         ^SofaColliderConfig.prParsePath(key, default);
     }
+    *sofaOctaveRepo_{ | path |
+        SofaColliderConfig.prWriteSetting("sofaOctaveRepo", path);
+    }
 
     // The root directory for various HRTF databases
     *hrtfDataDir {
@@ -28,6 +31,9 @@ SofaColliderConfig {
         key = "hrtfDataDir";
         default = SofaColliderConfig.sofaOctaveRepo +/+ "HRTFs";
         ^SofaColliderConfig.prParsePath(key, default);
+    }
+    *hrtfDataDir_{ | path |
+        SofaColliderConfig.prWriteSetting("hrtfDataDir", path);
     }
 
     *prParsePath { | key, default |
@@ -46,5 +52,22 @@ SofaColliderConfig {
         // if it has, use the specified directory instead of default
         if (parseSuccess, { path = settings.atAssociation(key); });
         ^path
+    }
+
+    *prWriteSetting{ | key, value |
+        // make sure the class has been initialized
+        if (configPath.isNil, { SofaColliderConfig.initClass; });
+
+        // try to parse the settings file, default to empty dict
+        settings = configPath.parseYAMLFile;
+        if (settings.isNil { settings = Dictionary(); });
+
+        // update the settings and write to the config file
+        settings.put(key, value);
+        File.use(configPath, "w", { | fp |
+            settings.keysValuesDo({ | setting, settingValue |
+                fp.write(key ++ ": " ++ value ++ "\n");
+            });
+        });
     }
 }
