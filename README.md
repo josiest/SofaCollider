@@ -31,6 +31,9 @@ A full list of dependencies below
   octave's package manager to install the
   [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).
 
+  You will likely also need to install netcdf for your system. On linux systems
+  you can acheive this with the command `sudo apt install libnetcdf-dev`
+
 - **SOFA Matlab/Octave API**: This package is not officially registered with
   Octave's package manager so you'll need to manually download the package
   source code into a specific place so that the SofaCollider Quark can see
