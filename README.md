@@ -50,6 +50,17 @@ A full list of dependencies below
   [octave website](https://www.gnu.org/software/octave/download) for
   installation instructions.
 
+  **Specifying a custom command path (NOT RECOMMENDED)**:
+
+  If you don't have octave installed in the normal place it would be installed,
+  you'll likely need to specify a custom commmand to run when using octave.
+  For example, if your octave command is in `~/Downloads/octave` you can write
+
+  ```
+  ~octaveCmd = "~/Downloads/octave".standardizePath;
+  SofaColliderConfig.octaveCmd_(~octaveCmd);
+  ```
+
 - **Octave NetCDF package**: Once you have octave installed, you can use
   octave's package manager to install the
   [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).

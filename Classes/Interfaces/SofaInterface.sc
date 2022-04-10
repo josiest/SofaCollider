@@ -312,7 +312,7 @@ SofaInterface {
         var allSourceCode, pipe, output, lastLine, nextLine;
 
         // the name of the octave command and the temporary source file
-        octaveCmd = "octave";
+        octaveCmd = SofaColliderConfig.octaveCmd;
         sourceFile = "temp.m";
 
         // define the source code to run:
