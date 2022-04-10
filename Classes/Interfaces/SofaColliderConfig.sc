@@ -7,6 +7,13 @@ SofaColliderConfig {
                  +/+ "SofaCollider/sofa_interface.yml";
     }
 
+    *octaveCmd {
+        ^SofaColliderConfig.prParsePath("octaveCmd", "octave");
+    }
+    *octaveCmd_{ | path |
+        SofaColliderConfig.prWriteSetting("octaveCmd", path);
+    }
+
     // The directory of the SOFA Matlab/Octave API
     *sofaOctaveRepo {
         var key, default;

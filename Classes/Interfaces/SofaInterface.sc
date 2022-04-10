@@ -22,14 +22,8 @@ SofaInterface {
         ].asDict;
     }
 
-    // the directory of the sofa octave repo
-    *sofaOctaveRepo{ ^SofaColliderConfig.sofaOctaveRepo }
-
-    // the root directory of hrtf databases
-    *hrtfDataDir{ ^SofaColliderConfig.hrtfDataDir }
-
     // the source code directory of the sofa octave repo
-    *sofaOctaveSrcDir{ ^SofaInterface.sofaOctaveRepo +/+ "API_MO" }
+    *sofaOctaveSrcDir{ ^SofaColliderConfig.sofaOctaveRepo +/+ "API_MO" }
 
     // the directory that has convention description csv files
     *conventionsDir{ ^SofaInterface.sofaOctaveSrcDir +/+ "conventions" }

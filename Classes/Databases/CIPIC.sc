@@ -7,7 +7,7 @@ CIPIC : Database {
     *initClass {
         prRootUrl = "https://sofacoustics.org/data/database/cipic";
         prSubjectFmt = "subject_%.sofa";
-        prLocalRoot = SofaInterface.hrtfDataDir +/+ "CIPIC";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "CIPIC";
     }
 
     // The url of the database online
