@@ -42,11 +42,6 @@ A full list of dependencies below
 
   **Option 1: Tell SofaCollider where to find the API**
 
-  **NOTE:** you must have SofaCollider installed first for this method to work.
-  This is possible because the the SOFA M/O API requirement is only a
-  requirement for using the SOFA interface - this method doesn't use this
-  functionality of the quark.
-
   While it may be cleaner to install the API in a way that matches how official
   packages are installed, this has some amount of a learning curve - and there
   might be other reasons you might want it installed in a specific place. In
@@ -59,6 +54,11 @@ A full list of dependencies below
   ~path = "~/Downloads/API_MO".standardizePath;
   SofaColliderConfig.sofaOctaveRepo_(~path);
   ```
+
+  **NOTE:** you must have SofaCollider installed first for this method to work.
+  This is possible because the the SOFA M/O API requirement is only a
+  requirement for using the SOFA interface - this method doesn't use that
+  functionality of the quark.
 
   **Option 2: Install API to default directory**
 
