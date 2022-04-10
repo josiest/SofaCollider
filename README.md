@@ -61,6 +61,8 @@ A full list of dependencies below
   SofaColliderConfig.octaveCmd_(~octaveCmd);
   ```
 
+  **NOTE**: This must be done _after_ the `SofaCollider` has been installed.
+
 - **Octave NetCDF package**: Once you have octave installed, you can use
   octave's package manager to install the
   [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).
