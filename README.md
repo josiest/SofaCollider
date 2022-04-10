@@ -10,7 +10,30 @@ UC Davis's CIPIC lab website has
 [a good introduction](https://www.ece.ucdavis.edu/cipic/spatial-sound/) to the
 topic
 
-## Installation
+## Usage
+
+In order to use the SOFA interface, you'll first needs some HRTFs. The
+SofaCollider Quark aims to make this very easy by providing a simple interface
+to pre-existing databases of HRTFs.
+
+```
+~subjectID = 3;
+CIPIC.downloadSubject(~subjectID); // Download the CIPIC subject_003 hrtf data
+
+// create a new Simple Free-Field HRIR object from the downloaded data
+~hrtfPath = CIPIC.subjectLocalPath(~subjectID);
+~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
+```
+
+Once you've created an `hrtf` object, you can query various metadata about the
+object. For example:
+
+```
+postf("hrtf.sofaConvention: %\n", ~hrtf.sofaConvention);
+postf("hrtf.listenerPosition.at(0): %\n", ~hrtf.listenerPosition.at(0));
+```
+
+## Installing
 
 ### Requirements
 
@@ -84,26 +107,3 @@ preferences window from the edit menu of the SuperCollider IDE, and navigating
 to the Interpreter section. You should then add the path to the SofaCollider
 project to the list of included directories, then save and recompile the class
 library.
-
-## Usage
-
-In order to use the SOFA interface, you'll first needs some HRTFs. The
-SofaCollider Quark aims to make this very easy by providing a simple interface
-to pre-existing databases of HRTFs.
-
-```
-~subjectID = 3;
-CIPIC.downloadSubject(~subjectID); // Download the CIPIC subject_003 hrtf data
-
-// create a new Simple Free-Field HRIR object from the downloaded data
-~hrtfPath = CIPIC.subjectLocalPath(~subjectID);
-~hrtf = SimpleFreeFieldHRIR.newFromFile(~hrtfPath);
-```
-
-Once you've created an `hrtf` object, you can query various metadata about the
-object. For example:
-
-```
-postf("hrtf.sofaConvention: %\n", ~hrtf.sofaConvention);
-postf("hrtf.listenerPosition.at(0): %\n", ~hrtf.listenerPosition.at(0));
-```
