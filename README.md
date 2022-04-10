@@ -38,7 +38,7 @@ A full list of dependencies below
 - **SOFA Matlab/Octave API**: This package is not officially registered with
   Octave's package manager so you'll need to manually download the package
   source code into a specific place so that the SofaCollider Quark can see
-  where it is.
+  where it is. There are two ways to do this:
 
   **Option 1: Tell SofaCollider where to find the API**
 
