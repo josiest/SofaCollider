@@ -35,6 +35,13 @@ postf("hrtf.listenerPosition.at(0): %\n", ~hrtf.listenerPosition.at(0));
 
 ## Installing
 
+Installing the quark is very simple, just run the following function on your
+SuperCollider IDE:
+
+```
+Quarks.install('https://github.com/josiest/SofaCollider')
+```
+
 ### Requirements
 
 In order to install and use the SofaCollider Quark, you of course need to have
@@ -112,12 +119,3 @@ A full list of dependencies below
   navigate inside it and run the following command
 
   `git clone https://github.com/sofacoustics/API_MO.git sofa`
-
-### Installation Instructions
-
-Once you have all the pre-requisites installed, you'll need to add the
-SofaCollider project to the class library. You can do this by opening up the
-preferences window from the edit menu of the SuperCollider IDE, and navigating
-to the Interpreter section. You should then add the path to the SofaCollider
-project to the list of included directories, then save and recompile the class
-library.
