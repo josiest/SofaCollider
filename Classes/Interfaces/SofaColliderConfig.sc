@@ -62,6 +62,8 @@ SofaColliderConfig {
     }
 
     *prWriteSetting{ | key, value |
+        var settings;
+
         // make sure the class has been initialized
         if (configPath.isNil, { SofaColliderConfig.initClass; });
 
