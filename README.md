@@ -35,12 +35,17 @@ postf("hrtf.listenerPosition.at(0): %\n", ~hrtf.listenerPosition.at(0));
 
 ## Installing
 
-Installing the quark is very simple, just run the following function on your
+If you're familiar with installing quarks, this should be relatively straightforward.
+If you have all the prerequisities isntalled, just run the following function on your
 SuperCollider IDE:
 
 ```
 Quarks.install('https://github.com/josiest/SofaCollider')
 ```
+
+If you've never installed a quark before, you'll likely need to install
+[git](https://git-scm.com/). You may also find it helpful to review the
+[SuperCollider instruction pages on installing quarks](https://github.com/supercollider-quarks/quarks#installing).
 
 ### Requirements
 
