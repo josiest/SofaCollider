@@ -275,6 +275,12 @@ SofaInterface {
           "printf('%%%.csv\\n');".format(attr.position, delim, attr.position))
     }
 
+    // print IR data
+    *prPrintIRData{
+        ^("csvwrite('%.csv', hrtf.%);\n".format() ++
+          "printf('%%%.csv\\n');".fromat())
+    }
+
     // convert a metadata name to a octave member-field name
     *prMetadataAsOctaveAttribute{ | name |
         ^name.replace(":", "_");
