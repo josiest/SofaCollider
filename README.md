@@ -1,17 +1,29 @@
 # SofaCollider
-
 A [SOFA](https://www.sofaconventions.org/mediawiki/index.php/SOFA_(Spatially_Oriented_Format_for_Acoustics))
 interface for [the SuperCollider language](https://supercollider.github.io/).
 
 ## What is SOFA
-
 SOFA is a data format for binaural audio and head-related transfer functions.
-UC Davis's CIPIC lab website has
-[a good introduction](https://www.ece.ucdavis.edu/cipic/spatial-sound/) to the
-topic
+
+#### Binaural audio
+If you're not familiar with these concepts, UC Davis's CIPIC lab website has
+[a good introduction](https://www.ece.ucdavis.edu/cipic/spatial-sound/)
+to the topic.
+
+#### SOFA Format
+The SOFA format is a type of data file that stores impulse response information,
+as well as spatial data of sound sources as well as the listener. The purpose of
+the SOFA format is to standardize how this data is stored so that binaural data
+can more easily be used.
+
+#### SofaCollider
+Many interfaces for SOFA already exist for languages such as
+[matlab](https://github.com/sofacoustics/API_MO) and
+[C++](https://github.com/sofacoustics/API_Cpp), but none yet exist for the
+SuperCollider language. SofaCollider is a Quark for SuperCollider that
+establishes an interface for working with SOFA data.
 
 ## Usage
-
 In order to use the SOFA interface, you'll first needs some HRTFs. The
 SofaCollider Quark aims to make this very easy by providing a simple interface
 to pre-existing databases of HRTFs.
@@ -79,6 +91,12 @@ A full list of dependencies below
 - **Octave NetCDF package**: Once you have octave installed, you can use
   octave's package manager to install the
   [NetCDF package](https://octave.sourceforge.io/netcdf/index.html).
+
+  Within octave run the following command:
+
+  ```
+  pkg install -forge netcdf
+  ```
 
   You will likely also need to install netcdf for your system in order for this
   package to work properly. On debian-based linux systems you can acheive this
