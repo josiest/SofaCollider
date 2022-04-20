@@ -1,10 +1,17 @@
 // A set of functions for interfacing with the SofaCollider Quark configuration
 SofaColliderConfig {
+    classvar <configDir;
     classvar <configPath;
 
     *initClass {
-        configPath = Platform.userConfigDir
-                 +/+ "SofaCollider/sofa_interface.yml";
+        configDir = Platform.userConfigDir +/+ "SofaCollider";
+        configPath = configDir +/+ "sofa_interface.yml";
+
+        // create the config file if it doesn't exist
+        if (File.exists(configPath).not, {
+            File.mkdir(configDir);
+            File.use(configPath, "w", { | fp | });
+        });
     }
 
     *octaveCmd {
@@ -54,10 +61,10 @@ SofaColliderConfig {
         if (configPath.isNil, { SofaColliderConfig.initClass; });
         settings = configPath.parseYAMLFile;
         parseSuccess = settings.notNil;
-        if (parseSuccess, { parseSuccess = settings.includesEquals(key)});
+        if (parseSuccess, { parseSuccess = settings.includesKey(key)});
 
         // if it has, use the specified directory instead of default
-        if (parseSuccess, { path = settings.atAssociation(key); });
+        if (parseSuccess, { path = settings.at(key); });
         ^path
     }
 
@@ -69,7 +76,7 @@ SofaColliderConfig {
 
         // try to parse the settings file, default to empty dict
         settings = configPath.parseYAMLFile;
-        if (settings.isNil { settings = Dictionary(); });
+        if (settings.isNil, { settings = Dictionary(); });
 
         // update the settings and write to the config file
         settings.put(key, value);
