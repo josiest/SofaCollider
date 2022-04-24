@@ -102,10 +102,11 @@ A full list of dependencies below
   package to work properly. On debian-based linux systems you can acheive this
   with the command `sudo apt install libnetcdf-dev`.
 
-- **SOFA Matlab/Octave API**: This package is not officially registered with
-  Octave's package manager so you'll need to manually download the package
-  source code into a specific place so that the SofaCollider Quark can see
-  where it is. There are two ways to do this:
+- **SOFA Matlab/Octave API**:
+  [This package](https://github.com/sofacoustics/API_MO/tree/master/API_MO) is
+  not officially registered with Octave's package manager so you'll need to
+  manually download the package source code into a specific place so that the
+  SofaCollider Quark can see where it is. There are two ways to do this:
 
   **Option 1: Tell SofaCollider where to find the API**
 
