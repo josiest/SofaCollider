@@ -1,13 +1,13 @@
-Listen : Database {
+Crossmod : Database {
 
     classvar <prRootUrl;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/listen (dtf)";
+        prRootUrl = "https://sofacoustics.org/data/database/crossmod (dtf)";
         prSubjectFmt = "IRC_%_C_44100.sofa";
-        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Listen";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Crossmod";
     }
 
     // The url of the database online
@@ -18,25 +18,25 @@ Listen : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        ^Listen.prSubjectFmt.format(id)
+        ^Crossmod.prSubjectFmt.format(id)
     }
 
     // Get the url of a subject
     *subjectUrl{ | id |
-        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
+        ^(Crossmod.rootUrl +/+ Crossmod.subjectFilename(id));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id |
-        ^(Listen.localRoot +/+ Listen.subjectFilename(id));
+        ^(Crossmod.localRoot +/+ Crossmod.subjectFilename(id));
     }
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Listen.subjectUrl(id);
+        url = Crossmod.subjectUrl(id);
 
         if (path.isNil, {
-            path = Listen.localRoot;
+            path = Crossmod.localRoot;
         });
         ^Database.downloadSubject(url, path);
     }

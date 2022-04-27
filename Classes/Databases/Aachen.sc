@@ -1,13 +1,13 @@
-Listen : Database {
+Aachen : Database {
 
     classvar <prRootUrl;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/listen (dtf)";
-        prSubjectFmt = "IRC_%_C_44100.sofa";
-        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Listen";
+        prRootUrl = "https://sofacoustics.org/data/database/aachen";
+        prSubjectFmt = "MRT%.sofa";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Aachen";
     }
 
     // The url of the database online
@@ -18,25 +18,27 @@ Listen : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        ^Listen.prSubjectFmt.format(id)
+        var padded;
+        padded = id.asStringToBase(10, 2);
+        ^Aachen.prSubjectFmt.format(padded)
     }
 
     // Get the url of a subject
     *subjectUrl{ | id |
-        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
+        ^(Aachen.rootUrl +/+ Aachen.subjectFilename(id));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id |
-        ^(Listen.localRoot +/+ Listen.subjectFilename(id));
+        ^(Aachen.localRoot +/+ Aachen.subjectFilename(id));
     }
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Listen.subjectUrl(id);
+        url = Aachen.subjectUrl(id);
 
         if (path.isNil, {
-            path = Listen.localRoot;
+            path = Aachen.localRoot;
         });
         ^Database.downloadSubject(url, path);
     }

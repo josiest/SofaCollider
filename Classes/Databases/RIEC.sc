@@ -1,13 +1,13 @@
-Listen : Database {
+RIEC : Database {
 
     classvar <prRootUrl;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/listen (dtf)";
-        prSubjectFmt = "IRC_%_C_44100.sofa";
-        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Listen";
+        prRootUrl = "https://sofacoustics.org/data/database/riec";
+        prSubjectFmt = "RIEC_hrir_subject_%.sofa";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "RIEC";
     }
 
     // The url of the database online
@@ -18,25 +18,27 @@ Listen : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        ^Listen.prSubjectFmt.format(id)
+        var padded;
+        padded = id.asStringToBase(10, 3);
+        ^RIEC.prSubjectFmt.format(padded)
     }
 
     // Get the url of a subject
     *subjectUrl{ | id |
-        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
+        ^(RIEC.rootUrl +/+ RIEC.subjectFilename(id));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id |
-        ^(Listen.localRoot +/+ Listen.subjectFilename(id));
+        ^(RIEC.localRoot +/+ RIEC.subjectFilename(id));
     }
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Listen.subjectUrl(id);
+        url = RIEC.subjectUrl(id);
 
         if (path.isNil, {
-            path = Listen.localRoot;
+            path = RIEC.localRoot;
         });
         ^Database.downloadSubject(url, path);
     }

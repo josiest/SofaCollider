@@ -1,13 +1,13 @@
-Listen : Database {
+Bili : Database {
 
     classvar <prRootUrl;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/listen (dtf)";
-        prSubjectFmt = "IRC_%_C_44100.sofa";
-        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Listen";
+        prRootUrl = "https://sofacoustics.org/data/database/bili (dtf)";
+        prSubjectFmt = "IRC_%_C_HRIR_96000.sofa";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Bili";
     }
 
     // The url of the database online
@@ -18,25 +18,25 @@ Listen : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        ^Listen.prSubjectFmt.format(id)
+        ^Bili.prSubjectFmt.format(id)
     }
 
     // Get the url of a subject
     *subjectUrl{ | id |
-        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
+        ^(Bili.rootUrl +/+ Bili.subjectFilename(id));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id |
-        ^(Listen.localRoot +/+ Listen.subjectFilename(id));
+        ^(Bili.localRoot +/+ Bili.subjectFilename(id));
     }
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Listen.subjectUrl(id);
+        url = Bili.subjectUrl(id);
 
         if (path.isNil, {
-            path = Listen.localRoot;
+            path = Bili.localRoot;
         });
         ^Database.downloadSubject(url, path);
     }
