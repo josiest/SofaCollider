@@ -75,7 +75,7 @@ SofaColliderConfig {
         if (configPath.isNil, { SofaColliderConfig.initClass; });
 
         // try to parse the settings file, default to empty dict
-        settings = configPath.parseYAMLFile;
+        settings = Dictionary.newFrom(configPath.parseYAMLFile);
         if (settings.isNil, { settings = Dictionary(); });
 
         // update the settings and write to the config file
