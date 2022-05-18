@@ -34,7 +34,7 @@ CHEDAR : Database {
     }
 
     *downloadSubject{ | id, path=nil |
-        var url;
+        var nums, urls;
         nums = ["02", "05", "1", "2"];
         urls = nums.collect({ | num | CHEDAR.subjectUrl(id, num) });
 
