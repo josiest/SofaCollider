@@ -69,20 +69,22 @@ SofaColliderConfig {
     }
 
     *prWriteSetting{ | key, value |
-        var settings;
-
+        var settingData, settings;
         // make sure the class has been initialized
         if (configPath.isNil, { SofaColliderConfig.initClass; });
 
         // try to parse the settings file, default to empty dict
-        settings = Dictionary.newFrom(configPath.parseYAMLFile);
-        if (settings.isNil, { settings = Dictionary(); });
+		settings = Dictionary();
+		settingData = configPath.parseYAMLFile;
+		if (settingData.notNil, {
+			settings = Dictionary.newFrom(settingData);
+		});
 
         // update the settings and write to the config file
         settings.put(key, value);
         File.use(configPath, "w", { | fp |
             settings.keysValuesDo({ | setting, settingValue |
-                fp.write(key ++ ": " ++ value ++ "\n");
+                fp.write(setting ++ ": " ++ settingValue ++ "\n");
             });
         });
     }
