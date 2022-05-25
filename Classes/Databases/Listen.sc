@@ -1,17 +1,17 @@
 Listen : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/listen (dtf)";
+        prRootURL = "https://sofacoustics.org/data/database/listen (dtf)";
         prSubjectFmt = "IRC_%_C_44100.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Listen";
     }
 
     // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -22,8 +22,8 @@ Listen : Database {
     }
 
     // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(Listen.rootUrl +/+ Listen.subjectFilename(id));
+    *subjectURL{ | id |
+        ^(Listen.rootURL +/+ Listen.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -33,7 +33,7 @@ Listen : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Listen.subjectUrl(id);
+        url = Listen.subjectURL(id);
 
         if (path.isNil, {
             path = Listen.localRoot;

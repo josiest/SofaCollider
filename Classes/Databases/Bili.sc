@@ -1,17 +1,17 @@
 Bili : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/bili (dtf)";
+        prRootURL = "https://sofacoustics.org/data/database/bili (dtf)";
         prSubjectFmt = "IRC_%_C_HRIR_96000.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Bili";
     }
 
     // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -22,8 +22,8 @@ Bili : Database {
     }
 
     // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(Bili.rootUrl +/+ Bili.subjectFilename(id));
+    *subjectURL{ | id |
+        ^(Bili.rootURL +/+ Bili.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -33,7 +33,7 @@ Bili : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Bili.subjectUrl(id);
+        url = Bili.subjectURL(id);
 
         if (path.isNil, {
             path = Bili.localRoot;

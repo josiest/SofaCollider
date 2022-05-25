@@ -1,17 +1,17 @@
 Crossmod : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/crossmod (dtf)";
+        prRootURL = "https://sofacoustics.org/data/database/crossmod (dtf)";
         prSubjectFmt = "IRC_%_C_44100.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Crossmod";
     }
 
     // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -22,8 +22,8 @@ Crossmod : Database {
     }
 
     // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(Crossmod.rootUrl +/+ Crossmod.subjectFilename(id));
+    *subjectURL{ | id |
+        ^(Crossmod.rootURL +/+ Crossmod.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -33,7 +33,7 @@ Crossmod : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Crossmod.subjectUrl(id);
+        url = Crossmod.subjectURL(id);
 
         if (path.isNil, {
             path = Crossmod.localRoot;

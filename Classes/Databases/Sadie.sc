@@ -1,17 +1,17 @@
 Sadie : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/sadie";
+        prRootURL = "https://sofacoustics.org/data/database/sadie";
         prSubjectFmt = "H%_48K_24bit_256tap_FIR_SOFA.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "SADIE";
     }
 
     // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -22,8 +22,8 @@ Sadie : Database {
     }
 
     // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(Sadie.rootUrl +/+ Sadie.subjectFilename(id));
+    *subjectURL{ | id |
+        ^(Sadie.rootURL +/+ Sadie.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -33,7 +33,7 @@ Sadie : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Sadie.subjectUrl(id);
+        url = Sadie.subjectURL(id);
 
         if (path.isNil, {
             path = Sadie.localRoot;

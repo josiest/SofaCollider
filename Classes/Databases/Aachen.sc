@@ -1,17 +1,17 @@
 Aachen : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/aachen";
+        prRootURL = "https://sofacoustics.org/data/database/aachen";
         prSubjectFmt = "MRT%.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Aachen";
     }
 
     // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -24,8 +24,8 @@ Aachen : Database {
     }
 
     // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(Aachen.rootUrl +/+ Aachen.subjectFilename(id));
+    *subjectURL{ | id |
+        ^(Aachen.rootURL +/+ Aachen.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -35,7 +35,7 @@ Aachen : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = Aachen.subjectUrl(id);
+        url = Aachen.subjectURL(id);
 
         if (path.isNil, {
             path = Aachen.localRoot;
