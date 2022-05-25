@@ -8,6 +8,12 @@ Bili : Database {
         prRootURL = "https://sofacoustics.org/data/database/bili (dtf)";
         prSubjectFmt = "IRC_%_C_HRIR_96000.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "Bili";
+
+        // make the database directory if it doesn't exist
+        prLocalRoot = prLocalRoot.standardizePath;
+        if (File.exists(prLocalRoot).not, {
+            File.mkdir(prLocalRoot);
+        });
     }
 
     // The url of the database online
@@ -23,7 +29,7 @@ Bili : Database {
 
     // Get the url of a subject
     *subjectURL{ | id |
-        ^(Bili.rootURL +/+ Bili.subjectFilename(id));
+        ^(Bili.rootURL ++ "/" ++ Bili.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -36,7 +42,7 @@ Bili : Database {
         url = Bili.subjectURL(id);
 
         if (path.isNil, {
-            path = Bili.localRoot;
+            path = Bili.subjectLocalPath(id);
         });
         ^Database.downloadSubject(url, path);
     }

@@ -8,6 +8,12 @@ Sadie : Database {
         prRootURL = "https://sofacoustics.org/data/database/sadie";
         prSubjectFmt = "H%_48K_24bit_256tap_FIR_SOFA.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "SADIE";
+
+        // make the database directory if it doesn't exist
+        prLocalRoot = prLocalRoot.standardizePath;
+        if (File.exists(prLocalRoot).not, {
+            File.mkdir(prLocalRoot);
+        });
     }
 
     // The url of the database online
@@ -23,7 +29,7 @@ Sadie : Database {
 
     // Get the url of a subject
     *subjectURL{ | id |
-        ^(Sadie.rootURL +/+ Sadie.subjectFilename(id));
+        ^(Sadie.rootURL ++ "/" ++ Sadie.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -36,7 +42,7 @@ Sadie : Database {
         url = Sadie.subjectURL(id);
 
         if (path.isNil, {
-            path = Sadie.localRoot;
+            path = Sadie.subjectLocalPath(id);
         });
         ^Database.downloadSubject(url, path);
     }

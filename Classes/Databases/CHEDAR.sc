@@ -7,7 +7,13 @@ CHEDAR : Database {
     *initClass {
         prRootURL = "https://sofacoustics.org/data/database/chedar";
         prSubjectFmt = "chedar_%_UV%m.sofa";
-        prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "CHEDAR";
+        prLocalRoot = SofaColliderConfig.hrtfDataDir ++ "/" ++ "CHEDAR";
+
+        // make the database directory if it doesn't exist yet
+        prLocalRoot = prLocalRoot.standardizePath;
+        if (File.exists(prLocalRoot).not, {
+            File.mkdir(prLocalRoot);
+        });
     }
 
     // The url of the database online
@@ -25,22 +31,22 @@ CHEDAR : Database {
 
     // Get the url of a subject
     *subjectURL{ | id, num |
-        ^(CHEDAR.rootURL +/+ CHEDAR.subjectFilename(id, num));
+        ^(CHEDAR.rootURL ++ "/" ++ CHEDAR.subjectFilename(id, num));
     }
 
     // Get the local path for a subject
     *subjectLocalPath{ | id, num |
-        ^(CHEDAR.localRoot +/+ CHEDAR.subjectFilename(id, num));
+        ^(CHEDAR.localRoot ++ "/" ++ CHEDAR.subjectFilename(id, num));
     }
 
     *downloadSubject{ | id, path=nil |
-        var nums, urls;
+        var nums;
         nums = ["02", "05", "1", "2"];
-        urls = nums.collect({ | num | CHEDAR.subjectURL(id, num) });
-
-        if (path.isNil, {
-            path = CHEDAR.localRoot;
+        nums.do({ | num |
+            var url, path;
+            url = CHEDAR.subjectURL(id, num);
+            path = CHEDAR.subjectLocalPath(id, num);
+            Database.downloadSubject(url, path);
         });
-        urls.do({ | url | Database.downloadSubject(url, path) })
     }
 }

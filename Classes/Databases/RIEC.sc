@@ -8,6 +8,12 @@ RIEC : Database {
         prRootURL = "https://sofacoustics.org/data/database/riec";
         prSubjectFmt = "RIEC_hrir_subject_%.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "RIEC";
+
+        // make the database directory if it doesn't exist yet
+        prLocalRoot = prLocalRoot.standardizePath;
+        if (File.exists(prLocalRoot).not, {
+            File.mkdir(prLocalRoot);
+        });
     }
 
     // The url of the database online
@@ -25,7 +31,7 @@ RIEC : Database {
 
     // Get the url of a subject
     *subjectURL{ | id |
-        ^(RIEC.rootURL +/+ RIEC.subjectFilename(id));
+        ^(RIEC.rootURL ++ "/" ++ RIEC.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -38,7 +44,7 @@ RIEC : Database {
         url = RIEC.subjectURL(id);
 
         if (path.isNil, {
-            path = RIEC.localRoot;
+            path = RIEC.subjectLocalPath(id);
         });
         ^Database.downloadSubject(url, path);
     }
