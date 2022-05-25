@@ -20,6 +20,11 @@ Database {
 
     // Download a subject file
     *downloadSubject { | url, path |
-        "wget \"%\" --directory-prefix % --quiet".format(url, path).unixCmd;
+        ^Download(url, path,
+            { "success".postln; },
+            { "failure".postln; },
+            { | rec, tot | (100.0*rec/tot).post; "%".postln; }
+        )
+
     }
 }

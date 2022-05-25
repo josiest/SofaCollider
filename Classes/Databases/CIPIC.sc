@@ -1,17 +1,23 @@
 CIPIC : Database {
 
-    classvar <prRootUrl;
+    classvar <prRootURL;
     classvar <prSubjectFmt;
     classvar <prLocalRoot;
 
     *initClass {
-        prRootUrl = "https://sofacoustics.org/data/database/cipic";
+        prRootURL = "https://sofacoustics.org/data/database/cipic";
         prSubjectFmt = "subject_%.sofa";
         prLocalRoot = SofaColliderConfig.hrtfDataDir +/+ "CIPIC";
+
+        // make the database directory if it doesn't exist
+        prLocalRoot = prLocalRoot.standardizePath;
+        if (File.exists(prLocalRoot).not, {
+            File.mkdir(prLocalRoot);
+        });
     }
 
-    // The url of the database online
-    *rootUrl { ^prRootUrl; }
+    // The uRL of the database online
+    *rootURL { ^prRootURL; }
 
     // The local path of the database root
     *localRoot { ^prLocalRoot; }
@@ -23,9 +29,9 @@ CIPIC : Database {
         ^CIPIC.prSubjectFmt.format(padded)
     }
 
-    // Get the url of a subject
-    *subjectUrl{ | id |
-        ^(CIPIC.rootUrl +/+ CIPIC.subjectFilename(id));
+    // Get the uRL of a subject
+    *subjectURL{ | id |
+        ^(CIPIC.rootURL ++ "/" ++ CIPIC.subjectFilename(id));
     }
 
     // Get the local path for a subject
@@ -35,10 +41,10 @@ CIPIC : Database {
 
     *downloadSubject{ | id, path=nil |
         var url;
-        url = CIPIC.subjectUrl(id);
+        url = CIPIC.subjectURL(id);
 
         if (path.isNil, {
-            path = CIPIC.localRoot;
+            path = CIPIC.subjectLocalPath(id);
         });
         ^Database.downloadSubject(url, path);
     }
