@@ -55,8 +55,8 @@ SofaInterface {
 
             hrtfPath,
 
-            // create octave source code strings that print all metadata attributes,
-            // both common and specific to the subclass
+            // create octave source code strings that print all
+            // metadata attributes, both common and specific to the subclass
             SofaInterface.metadataNames(convention)
                 .collect{ | attr | SofaInterface.prPrintMetadata(attr) } ++
 
@@ -147,7 +147,9 @@ SofaInterface {
         // strip the encapsulating [] brackets
         .replace("[").replace("]")
         // split the data into two columns
-        .split($;).collect{ | line | line.split($ ).collect{ | num | num.asFloat } }
+        .split($;).collect{ | line |
+            line.split($ ).collect{ | num | num.asFloat }
+        }
     }
 
     // get th econventions of a sofa file
@@ -156,8 +158,11 @@ SofaInterface {
         var conventionPath, header, rawData, conventions;
 
         // define the path to the convention file and load the data
-        conventionPath = SofaInterface.conventionsDir ++ "/FreeFieldHRIR_1.0.csv";
-        // the file extension *says* csv, but the actual files use tab delimeters
+        conventionPath = SofaInterface.conventionsDir
+                       ++ "/FreeFieldHRIR_1.0.csv";
+
+        // the file extension *says* csv,
+        // but the actual files use tab delimeters
         rawData = TabFileReader.read(conventionPath);
 
         // separate the header line from the rest
@@ -277,8 +282,16 @@ SofaInterface {
 
     // print IR data
     *prPrintIRData{
-        ^("csvwrite('%.csv', hrtf.%);\n".format() ++
-          "printf('%%%.csv\\n');".fromat())
+        var attrName, filename;
+
+        attrName = "Data.IR";
+        filename = "ir-data";
+
+          // write the IR matrix to file
+        ^("csvwrite('%.csv', hrtf.%);\n".format(filename, attrName) ++
+
+          // print the csv filename
+          "printf('%.csv\\n');".fromat(filename))
     }
 
     // convert a metadata name to a octave member-field name
@@ -311,8 +324,8 @@ SofaInterface {
     // \param hrtfPath the path name to the sofa file to load
     // \param source the octave code to run
     //
-    // The source code should refer to the SOFA object file as `hrtf`. Any output
-    // by the source code will be captured and returned as a string.
+    // The source code should refer to the SOFA object file as `hrtf`.
+    // Any output by the source code will be captured and returned as a string.
     *prRunSofaroutine { | hrtfPath, source |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
