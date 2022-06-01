@@ -3,7 +3,7 @@
        \summary: "An interface for HRTF sofa databases",
         \author: "Josie Thompson",
        \license: "GPL",
-       \version: "0.3.0",
+       \version: "0.3.1",
            \url: "https://github.com/josiest/SofaCollider",
 \ext_dependency: "See installation instructions: https://github.com/josiest/SofaCollider#installing"
 )
