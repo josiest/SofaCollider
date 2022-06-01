@@ -2,6 +2,8 @@
 SofaColliderConfig {
     classvar <configDir;
     classvar <configPath;
+    classvar <prMaxTmpCount = 512;
+    classvar <>prTmpCount = 0;
 
     *initClass {
         configDir = Platform.userConfigDir +/+ "SofaCollider";
@@ -48,6 +50,17 @@ SofaColliderConfig {
     }
     *hrtfDataDir_{ | path |
         SofaColliderConfig.prWriteSetting("hrtfDataDir", path);
+    }
+
+    *uniqueTmpFilepath{ | filename |
+        var name;
+        name = Platform.defaultTempDir
+           +/+ ("tmp_" ++ SofaColliderConfig.prTmpCount ++ "_" ++ filename);
+
+        SofaColliderConfig.prTmpCount = (SofaColliderConfig.prTmpCount + 1)
+                                      % SofaColliderConfig.prMaxTmpCount;
+
+        ^name
     }
 
     *prParsePath { | key, default |
