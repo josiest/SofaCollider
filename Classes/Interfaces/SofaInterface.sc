@@ -291,7 +291,7 @@ SofaInterface {
         ^("csvwrite('%.csv', hrtf.%);\n".format(filename, attrName) ++
 
           // print the csv filename
-          "printf('%.csv\\n');".fromat(filename))
+          "printf('%.csv\\n');".format(filename))
     }
 
     // convert a metadata name to a octave member-field name

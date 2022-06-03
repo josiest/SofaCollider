@@ -25,16 +25,17 @@ SofaColliderConfig {
 
     // The directory of the SOFA Matlab/Octave API
     *sofaOctaveRepo {
-        var key, default;
+        var key, default, sep;
         key = "sofaOctaveRepo";
+        sep = Platform.pathSeparator;
 
         // get the parent directory of the supercollider app suppport dir
         default = Platform.userAppSupportDir.standardizePath
-                          .split($/).drop(-1).join($/);
+                          .split(sep).drop(-1).join(sep);
 
         // the sofa package should be installed in octave/packages
         // relative to the ".local/share" directory
-        default = default +/+ "octave/packages/sofa";
+        default = default +/+ "octave" +/+ "packages" +/+ "sofa";
         ^SofaColliderConfig.prParsePath(key, default);
     }
     *sofaOctaveRepo_{ | path |
