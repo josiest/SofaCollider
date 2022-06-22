@@ -24,14 +24,28 @@ CIPIC : Database {
 
     // Get the filename for a subject
     *subjectFilename{ | id |
-        var padded;
+        var padded, message;
+
+        if (id.isNil) {
+            message = "CIPIC ERROR: attempted to get the hrtf filename for a "
+                    + "nil ID";
+            message.postln;
+            ^""
+        };
         padded = id.asStringToBase(10, 3);
         ^CIPIC.prSubjectFmt.format(padded)
     }
 
     // Get the uRL of a subject
     *subjectURL{ | id |
-        ^(CIPIC.rootURL ++ "/" ++ CIPIC.subjectFilename(id));
+        var message;
+        if (id.isNil) {
+            message = "CIPIC ERROR: attempted to get the URL for an hrtf with "
+                    + "a nil ID";
+            message.postln;
+            ^""
+        }
+        ^(CIPIC.rootURL ++ "/" ++ CIPIC.subjectFilename(id))
     }
 
     // Get the local path for a subject
@@ -40,7 +54,14 @@ CIPIC : Database {
     }
 
     *downloadSubject{ | id, path=nil |
-        var url;
+        var message, url;
+        if (id.isNil) {
+            message = "CIPIC ERROR: attempted to get download a subject with "
+                    + "a nil ID";
+            message.postln;
+            ^nil
+        };
+
         url = CIPIC.subjectURL(id);
 
         if (path.isNil, {

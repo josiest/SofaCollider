@@ -332,7 +332,7 @@ SofaInterface {
 
         // the name of the octave command and the temporary source file
         octaveCmd = SofaColliderConfig.octaveCmd;
-        sourceFile = SofaColliderConfig.uniqueTmpFilepath;
+        sourceFile = SofaColliderConfig.uniqueTmpFilepath("metadata.m");
 
         // define the source code to run:
         //   first we'll need to bootstrap some things
