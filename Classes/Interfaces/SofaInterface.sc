@@ -180,6 +180,10 @@ SofaInterface {
         ^conventions
     }
 
+    //
+    // Parsing
+    //
+
     *prParseLine{ | line, convention |
         // currently the only thing we're parsing is global metadata
         // once spatial metadata parsing is set up, this function will call
@@ -209,24 +213,28 @@ SofaInterface {
         // parse the attribute value based on its kind
         spatialArrayNames = SofaInterface.spatialArrayNames(convention);
         if (spatialArrayNames.includesEqual(components[0]), {
-            attrValue = SofaInterface.prParseSpatialArray(attrValue);
+            attrValue = SofaInterface.prParseMatrixData(attrValue);
         });
 
         ^(attrName -> attrValue)
     }
 
-    // parse a spatial array that's written in a csv file
-    //   prParseSpatialArray assumes the file is meant to be deleted after
-    //   parsing, and deletes the temporary file
+    // parse octave matrix data that's written in a csv file
+    //   assumes the file is meant to be deleted after parsing,
+    //   and deletes the temporary file
     //
     // Note: this isn't great design... Ideally we'd want to write and delete
     //       the temporary file within the same scope.
-    *prParseSpatialArray{ | filename |
+    *prParseMatrixData{ | filename |
         var data;
         data = CSVFileReader.readInterpret(filename);
         File.delete(filename);
         ^data;
     }
+
+    //
+    // Source Code Generating
+    //
 
     // abstract the octave attribute name-to-value printing
     // delimeter for ease of changing it
