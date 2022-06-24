@@ -70,6 +70,35 @@ SofaInterface {
         .asDict;
     }
 
+    // load IR data of a sofa object from file
+    *loadIRFromFile{ | hrtfPath |
+        var octaveOutput, lastLine, errorMessage;
+        var dataSize, irData;
+
+        if (File.exists(hrtfPath).not) {
+            errorMessage = "SofaCollider Error: Tried to load IR data from "
+                         + "%, but the file doesn't exist!".format(hrtfPath);
+            Exception(errorMessage).throw
+        };
+
+        octaveOutput = SofaInterface.prRunSofaroutine(
+            hrtfPath, [SofaInterface.prPrintIRData], dataFlag: "data"
+        );
+
+        if (octaveOutput.isNil) {
+            errorMessage = "SofaCollider Error: Tried to parse octave output, "
+                         + "but no output was produced!";
+            Exception(errorMessage).throw
+        };
+        // there might be trailing newlines, so strip before splitting
+        octaveOutput = octaveOutput.stripWhiteSpace.split($\n);
+
+        /// get the last line - the name of the csv file where IR data is written
+        lastLine = octaveOutput.clipAt(octaveOutput.size);
+        irData = SofaInterface.prParseMatrixData(lastLine.stripWhiteSpace);
+        ^irData.reshape(irData.size, 2, irData[0].size.div(2));
+    }
+
     // convert a normal attribute name to a unique symbol for dict keys
     *attributeAsSymbol{ | name |
         ^name.replace(":").replace(".").asSymbol;
@@ -295,8 +324,13 @@ SofaInterface {
         attrName = "Data.IR";
         filename = SofaColliderConfig.uniqueTmpFilepath("ir-data.csv");
 
+          // IR data has 3 dimensions
+          // we'll need to project down to two in order to writ to csv
+        ^("dataSize = size(hrtf.Data.IR);\n" ++
+          "dataSize = [dataSize(1), dataSize(2)*dataSize(3)];\n" ++
           // write the IR matrix to file
-        ^("csvwrite('%', hrtf.%);\n".format(filename, attrName) ++
+          "irAsCSVData = reshape(hrtf.%, dataSize);\n".format(attrName) ++
+          "csvwrite('%', irAsCSVData);\n".format(filename) ++
 
           // print the csv filename
           "printf('%\\n');".format(filename))
@@ -334,7 +368,7 @@ SofaInterface {
     //
     // The source code should refer to the SOFA object file as `hrtf`.
     // Any output by the source code will be captured and returned as a string.
-    *prRunSofaroutine { | hrtfPath, source |
+    *prRunSofaroutine { | hrtfPath, source, dataFlag="nodata" |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
 
@@ -351,7 +385,7 @@ SofaInterface {
             "SOFAstart('silent');",
 
             // load the specified sofa file and mark the beginning of output
-            "hrtf = SOFAload('%', 'nodata');".format(hrtfPath),
+            "hrtf = SOFAload('%', '%');".format(hrtfPath, dataFlag),
             "printf('SuperCollider Data Interface\\n');",
 
         // now we can append the specified source code
@@ -379,7 +413,6 @@ SofaInterface {
         // clean up and return the output
         pipe.close;
         File.delete(sourceFile);
-
         ^output
     }
 }
