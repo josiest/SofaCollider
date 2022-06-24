@@ -285,13 +285,13 @@ SofaInterface {
         var attrName, filename;
 
         attrName = "Data.IR";
-        filename = "ir-data";
+        filename = SofaColliderConfig.uniqueTmpFilepath("ir-data.csv");
 
           // write the IR matrix to file
-        ^("csvwrite('%.csv', hrtf.%);\n".format(filename, attrName) ++
+        ^("csvwrite('%', hrtf.%);\n".format(filename, attrName) ++
 
           // print the csv filename
-          "printf('%.csv\\n');".format(filename))
+          "printf('%\\n');".format(filename))
     }
 
     // convert a metadata name to a octave member-field name
