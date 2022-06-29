@@ -329,6 +329,7 @@ SofaInterface {
     *prRunSofaroutine { | hrtfPath, source |
         var sourceFile, octaveCmd;
         var allSourceCode, pipe, output, lastLine, nextLine;
+        var errorMessage;
 
         // the name of the octave command and the temporary source file
         octaveCmd = SofaColliderConfig.octaveCmd;
@@ -359,9 +360,14 @@ SofaInterface {
 
         // scan the output until we find the special tag
         lastLine = pipe.getLine; nextLine = pipe.getLine;
-        while ({ lastLine != "SuperCollider Data Interface" }, {
+        while ({ lastLine != "SuperCollider Data Interface" and: lastLine.notNil }, {
             lastLine = nextLine; nextLine = pipe.getLine;
         });
+        if (nextLine.isNil, {
+            errorMessage = "SofaCollider Error: No data was written to octave output";
+            Exception(errorMessage).throw
+        });
+
         // write the rest of the output data into an output string
         while ({ nextLine.notNil }, {
             output = output ++ nextLine ++ "\n";
