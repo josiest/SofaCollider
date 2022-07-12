@@ -406,8 +406,9 @@ SofaInterface {
             lastLine = nextLine; nextLine = pipe.getLine;
         });
         if (nextLine.isNil, {
-            errorMessage = "SofaCollider Error: No data was written to octave output";
-            Exception(errorMessage).throw
+            errorMessage = "SofaCollider Error: No data was written to octave output\n"
+	    		++ "- Does SofaColliderConfig.sofaOctaveRepo point to the right path?\n"
+                  	++ "- Is NetCDF installed on Octave?";
         });
 
         // write the rest of the output data into an output string
@@ -416,9 +417,14 @@ SofaInterface {
             nextLine = pipe.getLine;
         });
 
-        // clean up and return the output
+        // clean up regardless if successful
         pipe.close;
         File.delete(sourceFile);
+
+    	// crash gracefully if not successful
+    	if (errorMessage.notNil, {
+    	    Exception(errorMessage).throw
+    	});
         ^output
     }
 }
