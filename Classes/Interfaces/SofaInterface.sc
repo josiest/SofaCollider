@@ -214,10 +214,6 @@ SofaInterface {
     //
 
     *prParseLine{ | line, convention |
-        // currently the only thing we're parsing is global metadata
-        // once spatial metadata parsing is set up, this function will call
-        // the respective parse function based off the attribute type
-
         var delim, components, attrName, attrValue;
         var spatialArrayNames;
 
@@ -407,8 +403,8 @@ SofaInterface {
         });
         if (nextLine.isNil, {
             errorMessage = "SofaCollider Error: No data was written to octave output\n"
-	    		++ "- Does SofaColliderConfig.sofaOctaveRepo point to the right path?\n"
-                  	++ "- Is NetCDF installed on Octave?";
+                ++ "- Does SofaColliderConfig.sofaOctaveRepo point to the right path?\n"
+                ++ "- Is NetCDF installed on Octave?";
         });
 
         // write the rest of the output data into an output string
@@ -421,10 +417,10 @@ SofaInterface {
         pipe.close;
         File.delete(sourceFile);
 
-    	// crash gracefully if not successful
-    	if (errorMessage.notNil, {
-    	    Exception(errorMessage).throw
-    	});
+        // crash gracefully if not successful
+        if (errorMessage.notNil, {
+            Exception(errorMessage).throw
+        });
         ^output
     }
 }
