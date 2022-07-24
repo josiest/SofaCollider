@@ -64,7 +64,7 @@ SofaInterface {
                 .collect{ | attr | SofaInterface.prPrintSpatialArray(attr) }
         )
         // there might be trailing newlines, so strip before splitting
-        .stripWhiteSpace.split($\n)
+        .stripWhiteSpace.split(SofaInterface.prOctaveLineDelimeter.asSymbol)
         // convert each line into an association: attribute name to its value
         .collect{ | line | SofaInterface.prParseLine(line, convention) }
         .asDict;
@@ -91,7 +91,8 @@ SofaInterface {
             Exception(errorMessage).throw
         };
         // there might be trailing newlines, so strip before splitting
-        octaveOutput = octaveOutput.stripWhiteSpace.split($\n);
+        octaveOutput = octaveOutput.stripWhiteSpace
+            .split(SofaInterface.prOctaveLineDelimeter);
 
         /// get the last line - the name of the csv file where IR data is written
         lastLine = octaveOutput.clipAt(octaveOutput.size);
@@ -136,8 +137,8 @@ SofaInterface {
             "v = apv(%, :);".format(index),
 
             // print each element (azi, ele, r) separated by commas
-            "printf('\\%.%f,\\%.%f,\\%.%f\\n', v(1), v(2), v(3));".format(
-                precision, precision, precision),
+            "printf('\\%.%f,\\%.%f,\\%.%f%', v(1), v(2), v(3));".format(
+                precision, precision, precision, SofaInterface.prOctaveLineDelimeter),
         ])
         // split the output into list of values, collect as floats
         .split($,).collect({ | val | val.asFloat })
@@ -155,8 +156,8 @@ SofaInterface {
 
             // print the variables on a comma-seprated line
             // with specified precision for floating-points
-            "printf('\\%d,\\%.%f,\\%.%f,\\%.%f\\n', idx, azi, ele, r);"
-            .format(precision, precision, precision),
+            "printf('\\%d,\\%.%f,\\%.%f,\\%.%f%', idx, azi, ele, r);"
+            .format(precision, precision, precision, SofaInterface.prOctaveLineDelimeter),
         ])
         // the first value will be the index, so parse as an integer
         // the rest of the values will be floating-point
@@ -188,7 +189,7 @@ SofaInterface {
 
         // define the path to the convention file and load the data
         conventionPath = SofaInterface.conventionsDir
-                       ++ "/FreeFieldHRIR_1.0.csv";
+                      ++ "/FreeFieldHRIR_1.0.csv";
 
         // the file extension *says* csv,
         // but the actual files use tab delimeters
@@ -286,7 +287,9 @@ SofaInterface {
           delim ++
 
           "%s" ++   // format the attribute value in octave
-          "\\n'" ++ // end octave printf string on a newline
+          //
+          // end octave printf string on a newline
+          "%'".format(SofaInterface.prOctaveLineDelimeter) ++
 
           // pass the format arg to the octave printf
           // which will be an attribute of a sofa object
@@ -310,7 +313,9 @@ SofaInterface {
           // print with standard format:
           //   <name><delim><value>
           // where <value> in this case is the csv filename
-          "printf('%%%.csv\\n');".format(attr.position, delim, attr.position))
+          "printf('%%%.csv%');"
+              .format(attr.position, delim, attr.position,
+                      SofaInterface.prOctaveLineDelimeter))
     }
 
     // print IR data
@@ -329,7 +334,12 @@ SofaInterface {
           "csvwrite('%', irAsCSVData);\n".format(filename) ++
 
           // print the csv filename
-          "printf('%\\n');".format(filename))
+          "printf('%%');".format(filename, SofaInterface.prOctaveLineDelimeter))
+    }
+
+    // Print a line separator in octave output
+    *prOctaveLineDelimeter{
+        ^"\\n_SofaCollider_New_Line_\\n"
     }
 
     // convert a metadata name to a octave member-field name
@@ -383,7 +393,8 @@ SofaInterface {
 
             // load the specified sofa file and mark the beginning of output
             "hrtf = SOFAload('%', '%');".format(hrtfPath, dataFlag),
-            "printf('SuperCollider Data Interface\\n');",
+            "printf('SuperCollider Data Interface%');"
+                .format(SofaInterface.prOctaveLineDelimeter),
 
         // now we can append the specified source code
         ] ++ source;

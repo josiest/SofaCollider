@@ -24,51 +24,27 @@ SimpleFreeFieldHRIR : SofaConvention {
     }
 
     initListenerPositionFromAttributes{ | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\ListenerPosition);
-        listenerPosition = SpatialArray(attributes[attrNames.type],
-                                        attributes[attrNames.units],
-                                        attributes[attrNames.position]);
+        listenerPosition = SpatialArray.prNewFromAttrs(attributes, \ListenerPosition);
     }
 
     initReceiverPositionFromAttributes{ | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\ReceiverPosition);
-        receiverPosition = SpatialArray(attributes[attrNames.type],
-                                        attributes[attrNames.units],
-                                        attributes[attrNames.position]);
+        receiverPosition = SpatialArray.prNewFromAttrs(attributes, \ReceiverPosition);
     }
 
     initSourcePositionFromAttributes{ | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\SourcePosition);
-        sourcePosition = SpatialArray(attributes[attrNames.type],
-                                      attributes[attrNames.units],
-                                      attributes[attrNames.position]);
+        sourcePosition = SpatialArray.prNewFromAttrs(attributes, \SourcePosition);
     }
 
     initEmitterPositionFromAttributes{ | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\EmitterPosition);
-        emitterPosition = SpatialArray(attributes[attrNames.type],
-                                       attributes[attrNames.units],
-                                       attributes[attrNames.position]);
+        emitterPosition = SpatialArray.prNewFromAttrs(attributes, \EmitterPosition);
     }
 
     initListenerViewFromAttributes { | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\ListenerView);
-        listenerView = SpatialArray(attributes[attrNames.type],
-                                    attributes[attrNames.units],
-                                    attributes[attrNames.position]);
+        listenerView = SpatialArray.prNewFromAttrs(attributes, \ListenerView);
     }
 
     initListenerUpFromAttributes { | attributes |
-        var attrNames;
-        attrNames = SofaInterface.spatialAttributeNames(\ListenerUp);
-        listenerUp = SpatialArray(attributes[attrNames.type],
-                                  attributes[attrNames.units],
-                                  attributes[attrNames.position]);
+        listenerUp = SpatialArray.prNewFromAttrs(attributes, \ListenerUp);
     }
 
     databaseName{ ^prGlobalMetadata.databaseName; }
